@@ -189,10 +189,6 @@
         <div class="nav-wrapper">
             <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <!--<a href = "/" class="brand-logo brand-logo-lg"><i class="material-icons">cake</i>Pasteles</a>-->
-          <ul class="right">
-            <li><a href="/verificacionID"><i>Membresias</i></a></li>
-            <li><a href="/ventas"><i>Ventas</i></a></li>
-          </ul>
           <ul class="left hide-on-med-and-down " >
             <li><a href="#" data-target="slide-out" class="sidenav-trigger "><i class="material-icons">menu</i></a></li>
                 {% comment %} <li><a href="/" class="brand-logo "> <i class="material-icons">cake</i>Pasteles</a></li> {% endcomment %}
@@ -216,12 +212,10 @@
         </div>
     </li>
 
-    {% if request.user.is_authenticated %}
+
         <li><a class="waves-teal" href="/"><i class="material-icons">home</i>Home</a></li>
-        <li><a class="waves-teal" href="/verificacionID"><i class="material-icons">check_circle</i>Verificacion ID</a></li>
-        <li><a class="waves-teal" href="/"><i class="material-icons">person</i>Registrar usuario</a></li>
-        <li><a class="waves-teal" href="/"><i class="material-icons">sell</i>Venta</a></li>
-        <li><a class="waves-teal" href="/"><i class="material-icons">timeline</i>Historial de ventas</a></li>
+        <li><a class="waves-teal" href="/membresias"><i class="material-icons">inventory</i>Membresias</a></li>
+        <li><a class="waves-teal" href="/ventas"><i class="material-icons">groups</i>Ventas</a></li>
         {% if request.user.is_staff %}
          <!--<li><a class="waves-teal" href="/admin"><i class="material-icons">account_balance</i>Balance de la cuenta</a></li> -->
         {%  endif %}
@@ -235,9 +229,6 @@
         {% endif %}
         <!--<li><a href="/logout"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>-->
 
-    {% endif %}
-    <li><a class="waves-teal" href="/login"><i class="material-icons">login</i>Iniciar sesion</a></li>
-    <li><a class="waves-teal" href="/logout"><i class="material-icons">logout</i>Cerrar sesion</a></li>
 
     </ul>
 </head>

@@ -190,7 +190,7 @@
             <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <!--<a href = "/" class="brand-logo brand-logo-lg"><i class="material-icons">cake</i>Pasteles</a>-->
           <ul class="right">
-            <li><a href="/"><i>Membresias</i></a></li>
+            <li><a href="/membresias"><i>Membresias</i></a></li>
             <li><a href="/ventas"><i>Ventas</i></a></li>
           </ul>
           <ul class="left hide-on-med-and-down " >
@@ -216,13 +216,11 @@
     </li>
 
     {% if request.user.is_authenticated %}
-        <li><a class="waves-teal" href="/abarrotes"><i class="material-icons">home</i>Home</a></li>
-        <li><a class="waves-teal" href="/abarrotes/landingproductoa"><i class="material-icons">inventory</i>Productos</a></li>
-        <li><a class="waves-teal" href="/abarrotes/landingclientea"><i class="material-icons">groups</i>Clientes</a></li>
-        <li><a class="waves-teal" href="/abarrotes/landingproveedora"><i class="material-icons">cases</i>Proveedores</a></li>
-        <li><a class="waves-teal" href="/abarrotes/landingsucursala"><i class="material-icons">store</i>Sucursales</a></li>
-        <li><a class="waves-teal" href="/abarrotes/landingempleadoa"><i class="material-icons">group</i>Empleados</a></li>
-        <li><a class="waves-teal" href="/abarrotes/landingcategoriaa"><i class="material-icons">category</i>Categorias</a></li>
+        <li><a class="waves-teal" href="/"><i class="material-icons">home</i>Home</a></li>
+        <li><a class="waves-teal" href="/ventas"><i class="material-icons">category</i>Registrar producto</a></li>
+        <li><a class="waves-teal" href="/ventas"><i class="material-icons">inventory</i>Inventario</a></li>
+        <li><a class="waves-teal" href="/ventas"><i class="material-icons">sell</i>Venta</a></li>
+        <li><a class="waves-teal" href="/ventas"><i class="material-icons">timeline</i>Historial de ventas</a></li>
         {% if request.user.is_staff %}
          <!--<li><a class="waves-teal" href="/admin"><i class="material-icons">account_balance</i>Balance de la cuenta</a></li> -->
         {%  endif %}
@@ -234,11 +232,9 @@
         <!-- <li><a class="waves-teal" href="/plantas"><i class="material-icons">filter_vintage</i>{{request.user.tipo_usuario.cordiandor_de_area}}</a></li>-->
 
         {% endif %}
-        <!--<li><a href="/logout"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>-->
-
     {% endif %}
-    <li><a class="waves-teal" href="/login"><i class="material-icons">login</i>INICIAR SESION</a></li>
-    <li><a class="waves-teal" href="/logout"><i class="material-icons">logout</i>CERRAR SESION</a></li>
+    <li><a class="waves-teal" href="/login"><i class="material-icons">login</i>Iniciar sesion</a></li>
+    <li><a class="waves-teal" href="/logout"><i class="material-icons">logout</i>Cerrar sesion</a></li>
 
     </ul>
 </head>

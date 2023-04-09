@@ -7,5 +7,5 @@ from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     url(r'^$',landing, name="landing"),
-
+    path('logout/',LogoutView.as_view(next_page='/'), name='logout'),
 ]
