@@ -26,3 +26,14 @@ urlpatterns = [
     url(r'^', include('membresias.urls')),
     url('ventas/', include('ventas.urls')),
 ]
+
+if settings.STATIC_URL.startswith("/"):
+    urlpatterns+= [
+        url(
+            r'^{STATIC_URL}(?P<path>.*)$'.format(STATIC_URL=re.escape(settings.STATIC_URL.lstrip('/'))),
+            serve,
+            {'document_root': settings.STATIC_ROOT},
+        ),
+    ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
