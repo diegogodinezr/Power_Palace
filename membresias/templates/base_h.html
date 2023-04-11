@@ -34,9 +34,7 @@
     <style>
 
      body {
-        /*background-image: url("/media/images/texture.jpg") ;*/
-        background-size:cover;
-        background-repeat:repeat;
+        background-color: #001514;
         display: flex;
         min-height: 100vh;
         flex-direction: column;
@@ -44,6 +42,9 @@
 
      main {
         flex: 1 0 auto;
+    }
+    nav{
+        border-color: #001514;
     }
     nav .brand-logo.brand-logo-lg{
         display:none;
@@ -184,10 +185,20 @@
     .dataTables_length select {
         display:block;
     }
+    .logo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 3%;
+    }
+    .logosize{
+        width: 50%;
+        height: 50%;
+    }
 
     </style>
 	{% if not view_name == "landing" %}
-    <nav style="background-color:#001514">
+    <nav style="background-color:#001514; box-shadow: none;">
         <div class="nav-wrapper">
             <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <!--<a href = "/" class="brand-logo brand-logo-lg"><i class="material-icons">cake</i>Pasteles</a>-->
@@ -235,12 +246,14 @@
     </ul>
 </head>
 <body>
-    <header></header>
+    <div class="logo">
+        <img src="/media/image.png" alt="" class="logosize">
+    </div>
+    
 
 <main>
 
-	{% block content %}
-	{% endblock content%}
+	
 
 </main>
 
@@ -338,9 +351,9 @@
 
 <footer>
       <div class="footer-copyright grey-text black">
-        <div class="container">
-        © 2023 Copyright
-        <a class="grey-text"alling=" center" href="#!"></a>
+        <div class="container" style="display: flex; justify-content: center; align-items: center;">
+        © Power Palace 2023
+        <a class="grey-text" alling=" center" href="#!"></a>
         </div>
       </div>
 </footer>
