@@ -5,6 +5,7 @@ from membresias.views import *
 from .views import *
 from django.contrib.auth.views import LogoutView
 
+
 urlpatterns = [
     url(r'^$',home, name="home"),
     path('membresias/', login_usuario, name="login_usuario"),

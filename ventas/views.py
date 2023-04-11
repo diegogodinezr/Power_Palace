@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
 #====================LOGIN====================
-def login_usuario(request):
+def login_user(request):
     if request.user.is_authenticated:
         return redirect('interfaz_venta')
     else:
