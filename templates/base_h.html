@@ -265,8 +265,8 @@
 
         <div class="menu">
         <li><a class="waves-teal" href="/"><i class="material-icons">home</i>Home</a></li>
-        <li><a class="waves-teal" href="./login_usuario/"><i class="material-icons">inventory</i>Membresias</a></li>
-        <li><a class="waves-teal" href="{% url 'ventas:login_user' %}"><i class="material-icons">groups</i>Ventas</a></li>
+        <li><a class="waves-teal" href="login/"><i class="material-icons">inventory</i>Membresias</a></li>
+        <li><a class="waves-teal" href="ventas/login_user/"><i class="material-icons">groups</i>Ventas</a></li>
     </div>
         {% if request.user.is_staff %}
         {% endif %}
@@ -275,7 +275,9 @@
         {% else %}
 
         {% endif %}
-
+        {% if request.user.is_authenticated %}
+        <li><a class="waves-teal" href="/logout/"><i class="material-icons">exit_to_app</i>Salir</a></li>
+        {% endif %}
 
     </ul>
 </head>

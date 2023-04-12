@@ -33,11 +33,11 @@ def login_usuario(request):
                 messages.info(request, 'Username OR password is incorrect')
 
         context = {}
-        return render(request, 'login.html', context)
+        return render(request, 'membresias/login.html', context)
     
 #====================VERIFICACION ID ====================
 def verificacionID(request):
-    template_to_return='verificacionID.html'
+    template_to_return='membresias/verificacionID.html'
     context={ 
         'view_name': "landing1",
     }
