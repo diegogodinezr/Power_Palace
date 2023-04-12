@@ -278,7 +278,9 @@
         {% else %}
 
         {% endif %}
-
+        {% if request.user.is_authenticated %}
+        <li><a class="waves-teal" href="/logout/"><i class="material-icons">exit_to_app</i>Salir</a></li>
+        {% endif %}
 
     </ul>
 </head>

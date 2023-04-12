@@ -4,17 +4,10 @@
 {% block content %}
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     .container {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-top: 40px;
     }
 
     .user_card {
@@ -32,53 +25,109 @@
         -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 20px;
-    }
-
-    .form-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
 
     }
-    h3{
+
+    .form_container {
+        margin-top: 20px;
+    }
+
+    #form-title {
         color: #fff;
+        font-family: marko-one;
+
     }
-    #txt {
-        width: 50%;
-        height: 40px;
+
+    .login_btn {
+        width: 100%;
+        background: #fff !important;
+        color: black !important;
+        margin-top: 30px;
         border-radius: 20px;
-        border: none;
-        padding: 0 20px;
-        font-size: 16px;
-        margin-bottom: 20px;
-        color: #fff;
-        background-color: rgba(44, 108, 130, 0.3);
-        /* Establecer el valor de opacidad en la propiedad background-color */
+    }
+
+    .login_btn:focus {
+        box-shadow: none !important;
+        outline: 0px !important;
+    }
+
+    .login_container {
+        padding: 0 2rem;
+    }
+
+    .input-group-text {
+        background: #001514 !important;
+        color: white !important;
+        border: 0 !important;
+        border-radius: 0.25rem 0 0 0.25rem !important;
+    }
+
+    .form-control {
+        border-radius: 20px;
+        background-color: #fff;
+        opacity: 80%;
+
+    }
+
+    .form-control:focus {
+        background-color: #fff;
+        opacity: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 80px;
+    }
+
+    .main {
+        list-style: none;
+        margin: 1em;
+        display: grid;
+        gap: 20px;
+        grid-auto-flow: dense;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        justify-content: center;
+        /* Centra los elementos horizontalmente */
+    }
+
+    .botones {
+        text-decoration: none;
+        border-radius: 20px;
+        background-color: #fff;
+        width: 120px;
+        height: 30px;
+    }
+
+    .botones.wide {
+        grid-row: 2;
+        /* Hace que el botón "Pagar" ocupe la segunda fila */
     }
 </style>
 
 <body>
-    <div class="container">
-        <div class="user_card">
-            <h3>Verificación de ID</h3>
-            <form action="">
-                <div class="form-container">
-                    <input type="text" name="" placeholder="ID o Nombre de Usuario" id="txt">
+    <br>
+    <br>
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card user_card p-3">
+                    <div class="card-body">
+                        <h3 id="form-title" class="text-center mb-4"
+                            style="display: flex; justify-content: center; margin-bottom: 50px;">Verificación de ID</h3>
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <div class="">
+                                <input type="text" name="id" placeholder="ID DE USUARIO O NOMBRE" class="form-control">
+                            </div>
+                            <div class="main">
+                                <input type="button" value="Verificar" class="botones">
+                                <input type="button" value="Registrar" class="botones">
+                                <input type="button" value="Pagar" class="botones wide">
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="regver">
-                    <input type="submit" value="Verificar" class="boton">
-                    <input type="button" value="Registrar" class="boton">
-                </div>
-                <div class="pay">
-                    <input type="button" value="Pagar" class="boton">
-                </div>
-
-
-
-
-            </form>
+            </div>
         </div>
-
     </div>
 
 </body>
