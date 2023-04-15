@@ -9,7 +9,7 @@ from django.contrib import messages
 
 #====================HOME====================
 def home(request):
-    template_to_return='home.html'
+    template_to_return='membresias/home.html'
     context={ 
         'view_name': "landing1",
     }

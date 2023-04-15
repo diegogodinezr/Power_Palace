@@ -232,8 +232,9 @@
             width: 50%;
             height: 50%;
         }
-        .menu{
-            margin-top: 15%;
+
+        .menu {
+            margin-top: 3%;
         }
     </style>
     {% if not view_name == "landing" %}
@@ -251,7 +252,7 @@
     <ul id="slide-out" class="sidenav">
         <li>
             <div class="user-view">
-                <div class="background" style="height: 130px;">
+                <div class="background" style="height: 150px;">
                     <img src="/media/fondo.jpeg" style="width:100%; height: 100%;">
                 </div>
                 <a href="#user"><img class="circle" src="/media/usuario.webp"></a>
@@ -263,11 +264,21 @@
             </div>
         </li>
 
+<<<<<<< HEAD
         <div class="menu">
         <li><a class="waves-teal" href="/"><i class="material-icons">home</i>Home</a></li>
         <li><a class="waves-teal" href="login/"><i class="material-icons">inventory</i>Membresias</a></li>
         <li><a class="waves-teal" href="ventas/login_user/"><i class="material-icons">groups</i>Ventas</a></li>
     </div>
+=======
+        <div class="menu" style="margin-top: 22%;">
+            <li><a class="waves-teal" href="/login_usuario/"><i class="material-icons">inventory</i>Membresias</a></li>
+            <li><a class="waves-teal" href="/login_user"><i class="material-icons">groups</i>Ventas</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="/logout/"><i class="material-icons">exit_to_app</i>Cerrar sesión</a></li>
+            {% endif %}
+        </div>
+>>>>>>> main
         {% if request.user.is_staff %}
         {% endif %}
 

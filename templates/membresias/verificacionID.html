@@ -4,10 +4,23 @@
 {% block content %}
 
 <style>
+<<<<<<< HEAD
+=======
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+>>>>>>> main
     .container {
         display: flex;
         justify-content: center;
         align-items: center;
+<<<<<<< HEAD
+=======
+        margin-top: 40px;
+>>>>>>> main
     }
 
     .user_card {
@@ -25,6 +38,7 @@
         -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 20px;
+<<<<<<< HEAD
 
     }
 
@@ -100,10 +114,35 @@
     .botones.wide {
         grid-row: 2;
         /* Hace que el botón "Pagar" ocupe la segunda fila */
+=======
+    }
+
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+    h3{
+        color: #fff;
+    }
+    #txt {
+        width: 50%;
+        height: 40px;
+        border-radius: 20px;
+        border: none;
+        padding: 0 20px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #fff;
+        background-color: rgba(44, 108, 130, 0.3);
+        /* Establecer el valor de opacidad en la propiedad background-color */
+>>>>>>> main
     }
 </style>
 
 <body>
+<<<<<<< HEAD
     <br>
     <br>
     <div class="container h-100">
@@ -128,6 +167,29 @@
                 </div>
             </div>
         </div>
+=======
+    <div class="container">
+        <div class="user_card">
+            <h3>Verificación de ID</h3>
+            <form action="">
+                <div class="form-container">
+                    <input type="text" name="" placeholder="ID o Nombre de Usuario" id="txt">
+                </div>
+                <div class="regver">
+                    <input type="submit" value="Verificar" class="boton">
+                    <input type="button" value="Registrar" class="boton">
+                </div>
+                <div class="pay">
+                    <input type="button" value="Pagar" class="boton">
+                </div>
+
+
+
+
+            </form>
+        </div>
+
+>>>>>>> main
     </div>
 
 </body>
