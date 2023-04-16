@@ -10,7 +10,7 @@ from django.contrib import messages
 #====================LOGIN====================
 def login_ventas(request):
     if request.user.is_authenticated:
-        return redirect('interfaz_venta')
+        return redirect('/ventas/interfaz_venta')
     else:
         if request.method == 'POST':
             username = request.POST.get('username')
@@ -20,12 +20,12 @@ def login_ventas(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('interfaz_venta')
+                return redirect('/ventas/interfaz_venta')
             else:
                 messages.info(request, 'Username OR password is incorrect')
 
         context = {}
-        return render(request, 'ventas/loginv.html', context)
+        return render(request, 'loginv.html', context)
     
 #====================VERIFICACION ID ====================
 def interfaz_venta(request):
