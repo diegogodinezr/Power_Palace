@@ -25,11 +25,11 @@ def login_user(request):
                 messages.info(request, 'Username OR password is incorrect')
 
         context = {}
-        return render(request, 'loginv.html', context)
+        return render(request, 'ventas/loginv.html', context)
     
 #====================VERIFICACION ID ====================
 def interfaz_venta(request):
-    template_to_return='interfaz_venta.html'
+    template_to_return='ventas/interfaz_venta.html'
     context={ 
         'view_name': "landing1",
     }
