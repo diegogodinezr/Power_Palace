@@ -9,16 +9,16 @@ from django.contrib import messages
 
 #====================HOME====================
 def home(request):
-    template_to_return='membresias/home.html'
+    template_to_return='home.html'
     context={ 
         'view_name': "landing1",
     }
     return render (request,template_to_return,context)
 
 #====================LOGIN====================
-def login_usuario(request):
+def login_membresias(request):
     if request.user.is_authenticated:
-        return redirect('verificacionID')
+        return redirect('/verificacionID')
     else:
         if request.method == 'POST':
             username = request.POST.get('username')
@@ -28,16 +28,16 @@ def login_usuario(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('verificacionID')
+                return redirect('/verificacionID')
             else:
                 messages.info(request, 'Username OR password is incorrect')
 
         context = {}
-        return render(request, 'membresias/login.html', context)
+        return render(request, 'login.html', context)
     
 #====================VERIFICACION ID ====================
 def verificacionID(request):
-    template_to_return='membresias/verificacionID.html'
+    template_to_return='verificacionID.html'
     context={ 
         'view_name': "landing1",
     }

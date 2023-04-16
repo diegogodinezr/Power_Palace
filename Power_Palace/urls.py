@@ -24,7 +24,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^', include('membresias.urls')),
-    url(r'^', include('ventas.urls')),
+    url('ventas/', include('ventas.urls')),
 ]
 
 if settings.STATIC_URL.startswith("/"):

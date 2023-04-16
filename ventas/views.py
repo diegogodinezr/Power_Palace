@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
 #====================LOGIN====================
-def login_user(request):
+def login_ventas(request):
     if request.user.is_authenticated:
         return redirect('interfaz_venta')
     else:
@@ -29,7 +29,7 @@ def login_user(request):
     
 #====================VERIFICACION ID ====================
 def interfaz_venta(request):
-    template_to_return='ventas/interfaz_venta.html'
+    template_to_return='interfaz_venta.html'
     context={ 
         'view_name': "landing1",
     }
