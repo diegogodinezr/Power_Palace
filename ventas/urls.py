@@ -12,4 +12,8 @@ urlpatterns = [
     path("loginv/", login_ventas, name="login_ventas"),
     path('interfaz_venta/', interfaz_venta, name="interfaz_venta"),
     path('logout/',LogoutView.as_view(next_page='/'), name='logout'),
+    path('registrar_producto/',registrar_producto, name="registrar_producto"),
+    path('inventario/',inventario, name="inventario"),
+    path('ventas/',ventas, name="ventas"),
+    path('historial_ventas/',historial_ventas, name="historial_ventas"),
 ]
