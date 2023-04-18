@@ -1,20 +1,146 @@
-{% extends "base_v.html" %}
-{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Producto</title>
+    <link rel="stylesheet" href="reset.css">
+    <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
+  <style>
+    .contenido {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 96vh;
+      background-color: white;
+      font-family: 'Magra', sans-serif;
+    }
+    #contenedor-formulario {
+      background-color: #791F00;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 300px;
+      width: 100%;
+      margin: 0 auto; /* Agregar esta línea */
+      text-align: center; 
+    }
 
-{% block content %}
-        <link rel="stylesheet" href="reset.css">
-        <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
-        <style>
-            
-        </style>
-    </head>
-    <body>
-        <main>
-            <h1>productos</h1>
-        </main>
-    </body>
-{% endblock content%}
+    #formulario-producto{
+        display: block;
+        margin: 0 auto; 
+        max-width: 210px; /* Agregar esta línea para limitar el ancho del formulario */
+        align-items: center;
+    }
 
-{% block js %}
+    input,
+    textarea {
+        display: block;
+        margin: 0 0 25px;
+        width: 96%; /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
+        height: 25px;
+        background-color: rgba(255, 255, 255, 0.3); /* Cambiar opacity por rgba */
+        color: #FFFFFF; /* Establecer el color del texto en blanco */
+        border-radius: 30px;
+        text-align: center;
+        border: black;
+        resize: none;
+    }
+    input::placeholder {
+        color: white; /* Cambiar el color del placeholder */
+        opacity: .5;
+    }
+    textarea::placeholder {
+        color: white; /* Cambiar el color del placeholder */
+        opacity: .5;
+    }
 
-{% endblock js %}
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    button[type="submit"] {
+      padding: 8px 16px;
+      background-color: white;
+      color: black;
+      border: none;
+      cursor: pointer;
+      border-radius: 30px;
+      width: 100px;
+    }
+
+  </style>
+
+</head>
+<div class=contenido>
+  <div style="width: 100%; text-align: center;">
+    <h1 style="font-size: 30px; padding-bottom: 5px;">Registrar producto</h1>
+    <div id="contenedor-formulario">
+        <form id="formulario-producto">
+          <input type="text" id="id" required required placeholder="ID">
+          <input type="text" id="nombre" required placeholder="Nombre">
+          <input type="number" id="precio-individual" required placeholder="Precio Individual">
+          <textarea id="descripcion" required placeholder="Descripción"></textarea>
+          <input type="number" id="cantidad" required placeholder="Cantidad">
+          <input type="number" id="precio" readonly placeholder="Precio">
+          <button type="submit">Guardar</button>
+        </form>
+      </div>
+  </div>
+</div>
+</html>
+
+
+<script>
+    document.getElementById('formulario-producto').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Obtener los valores de los campos del formulario
+        var id = document.getElementById('id').value;
+        var nombre = document.getElementById('nombre').value;
+        var precioIndividual = document.getElementById('precio-individual').value;
+        var descripcion = document.getElementById('descripcion').value;
+        var cantidad = document.getElementById('cantidad').value;
+        var precio = precioIndividual * cantidad;
+
+        // Asignar el valor del precio calculado al campo de precio
+        var inputPrecio = document.getElementById('precio');
+        // Aquí puedes hacer lo que necesites con los datos del formulario, por ejemplo, enviarlos a un servidor para su procesamiento
+    // Limpiar el formulario después de guardar los datos
+        var formulario = document.getElementById('formulario-producto');
+        formulario.reset();
+    });
+    document.getElementById('cantidad').addEventListener('input', recalcularPrecio);
+    document.getElementById('precio-individual').addEventListener('input', recalcularPrecio);
+    
+    function recalcularPrecio() {
+        var precioIndividual = document.getElementById('precio-individual').value;
+        var cantidad = document.getElementById('cantidad').value;
+        if (Number.isInteger(parseFloat(cantidad))) {
+            var precio = precioIndividual * cantidad;
+            var inputPrecio = document.getElementById('precio');
+        } else {
+            // Si no es un número entero, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            console.error('La cantidad debe ser un número entero.');
+        }
+        if (cantidad !== '' && precioIndividual !== '') {
+            inputPrecio.value = precio;
+            inputPrecio.style.color = 'white';
+        }else{
+            inputPrecio.value ="";
+        }
+    }
+    document.getElementById('cantidad').addEventListener('input', function() {
+    
+    var precioIndividual = document.getElementById('precio-individual').value;
+    var cantidad = document.getElementById('cantidad').value;
+    var precio = precioIndividual * cantidad;
+    var inputPrecio = document.getElementById('precio');
+    if (cantidad !== '' && precioIndividual !== '') {
+            inputPrecio.value = precio;
+            inputPrecio.style.color = 'white';
+        }else{
+            inputPrecio.value ="";
+        }
+    });
+</script>
