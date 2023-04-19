@@ -70,6 +70,73 @@
       width: 100px;
     }
 
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.2); /* Fondo oscuro semitransparente */
+      z-index: 9999; /* Asegurarse de que el modal esté por encima del resto del contenido */
+    }
+
+.modal-contenido {
+      font-family: 'Magra', sans-serif;
+      width: 340px;
+      height: 120px;
+      background-color: #791F00;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      top: 50%; /* Centrar verticalmente */
+      left: 50%; /* Centrar horizontalmente */
+      transform: translate(-50%, -50%); /* Centrar con transform */
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: solid black;
+    }
+
+    .modal-contenido p{
+      color: white;
+      font-size: 15px;
+      margin-top: 50px;
+    }
+
+    .modal-cerrar{
+      width: 100%;
+      height: 35px;
+      display: flex;
+      justify-content: flex-end; /* Alinear el contenido al final del div */
+      background-color: white;
+      position: absolute; /* Establecer posición absoluta */
+      top: 0; /* Anclar el div en la parte superior del modal */
+      left: 0; /* Anclar el div a la izquierda del modal */
+      padding: 2px; /* Añadir un espacio interno de 10px */
+      box-sizing: border-box; /* Incluir el padding en el ancho total del div */
+      border-bottom: solid black;
+    }
+
+
+    .modal-cerrar img{
+      width: 40px;
+      height: 30px;
+      cursor: pointer;
+      
+    }
+
+    .botones-modal{
+      display: inline-block;
+      border-radius: 10px;
+      background-color: white;
+      color: black;
+      margin-bottom: 15px;
+      padding: 4px 6px;
+      border: 0;
+    }
   </style>
 
 </head>
@@ -81,12 +148,22 @@
           <input type="text" id="id" required required placeholder="ID">
           <input type="text" id="nombre" required placeholder="Nombre">
           <input type="number" id="precio-individual" required placeholder="Precio Individual">
-          <textarea id="descripcion" required placeholder="Descripción"></textarea>
           <input type="number" id="cantidad" required placeholder="Cantidad">
-          <input type="number" id="precio" readonly placeholder="Precio">
+          <textarea id="descripcion" required placeholder="Descripción"></textarea>
+          <input type="text" id="categoria" required placeholder="categoría">
           <button type="submit">Guardar</button>
         </form>
       </div>
+  </div>
+</div>
+<div id="modal" class="modal">
+  <div class="modal-contenido">
+    <div class="modal-cerrar">
+      <img src="/media/cerrar.png" id="miImagen" alt="cerrar">
+    </div>
+    <p>Producto registrado correctamente</p>
+    <button class="botones-modal" onclick="cerrarModal()">Registrar nuevo producto</button>
+    <button class="botones-modal" onclick="cerrarModal()">Finalizar</button> <!-- Agregar un botón para cerrar el modal -->
   </div>
 </div>
 </html>
@@ -101,46 +178,21 @@
         var precioIndividual = document.getElementById('precio-individual').value;
         var descripcion = document.getElementById('descripcion').value;
         var cantidad = document.getElementById('cantidad').value;
-        var precio = precioIndividual * cantidad;
-
-        // Asignar el valor del precio calculado al campo de precio
-        var inputPrecio = document.getElementById('precio');
-        // Aquí puedes hacer lo que necesites con los datos del formulario, por ejemplo, enviarlos a un servidor para su procesamiento
-    // Limpiar el formulario después de guardar los datos
-        var formulario = document.getElementById('formulario-producto');
-        formulario.reset();
-    });
-    document.getElementById('cantidad').addEventListener('input', recalcularPrecio);
-    document.getElementById('precio-individual').addEventListener('input', recalcularPrecio);
-    
-    function recalcularPrecio() {
-        var precioIndividual = document.getElementById('precio-individual').value;
-        var cantidad = document.getElementById('cantidad').value;
-        if (Number.isInteger(parseFloat(cantidad))) {
-            var precio = precioIndividual * cantidad;
-            var inputPrecio = document.getElementById('precio');
-        } else {
+        var categoria=document.getElementById('categoria').value;
+        if (!Number.isInteger(parseFloat(cantidad))) {
             // Si no es un número entero, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
             console.error('La cantidad debe ser un número entero.');
         }
-        if (cantidad !== '' && precioIndividual !== '') {
-            inputPrecio.value = precio;
-            inputPrecio.style.color = 'white';
-        }else{
-            inputPrecio.value ="";
-        }
-    }
-    document.getElementById('cantidad').addEventListener('input', function() {
-    
-    var precioIndividual = document.getElementById('precio-individual').value;
-    var cantidad = document.getElementById('cantidad').value;
-    var precio = precioIndividual * cantidad;
-    var inputPrecio = document.getElementById('precio');
-    if (cantidad !== '' && precioIndividual !== '') {
-            inputPrecio.value = precio;
-            inputPrecio.style.color = 'white';
-        }else{
-            inputPrecio.value ="";
-        }
+        // Aquí puedes hacer lo que necesites con los datos del formulario, por ejemplo, enviarlos a un servidor para su procesamiento
+    // Limpiar el formulario después de guardar los datos
+        var formulario = document.getElementById('formulario-producto');
+        var modal = document.getElementById('modal');
+        modal.style.display = 'block';
+        formulario.reset();
     });
+    document.getElementById("miImagen").addEventListener("click", cerrarModal);
+    function cerrarModal() {
+      var modal = document.getElementById('modal');
+      modal.style.display = 'none';
+    }
 </script>
