@@ -1,5 +1,7 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
+{% block content %}
 <head>
     <meta charset="UTF-8">
     <title>Formulario de Producto</title>
@@ -144,10 +146,11 @@
   <div style="width: 100%; text-align: center;">
     <h1 style="font-size: 35px; padding-bottom: 5px;">Registrar producto</h1>
     <div id="contenedor-formulario">
-        <form id="formulario-producto">
-          <input type="text" id="id" required required placeholder="ID">
+        <form id="formulario-producto" method="post" action="/ventas/post_producto/" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="text" id="id" required required placeholder="ID producto">
           <input type="text" id="nombre" required placeholder="Nombre">
-          <input type="number" id="precio-individual" required placeholder="Precio Individual">
+          <input type="number" id="precio" required placeholder="Precio">
           <input type="number" id="cantidad" required placeholder="Cantidad">
           <textarea id="descripcion" required placeholder="Descripción"></textarea>
           <input type="text" id="categoria" required placeholder="categoría">
@@ -166,6 +169,7 @@
     <button class="botones-modal" onclick="cerrarModal()">Finalizar</button> <!-- Agregar un botón para cerrar el modal -->
   </div>
 </div>
+{% endblock content %}
 </html>
 
 
@@ -173,9 +177,10 @@
     document.getElementById('formulario-producto').addEventListener('submit', function(e) {
         e.preventDefault();
         // Obtener los valores de los campos del formulario
-        var id = document.getElementById('id').value;
+        var formulario = document.getElementById('formulario-producto');
+        var id_producto = document.getElementById('id').value;
         var nombre = document.getElementById('nombre').value;
-        var precioIndividual = document.getElementById('precio-individual').value;
+        var precio = document.getElementById('precio').value;
         var descripcion = document.getElementById('descripcion').value;
         var cantidad = document.getElementById('cantidad').value;
         var categoria=document.getElementById('categoria').value;
@@ -185,11 +190,38 @@
         }
         // Aquí puedes hacer lo que necesites con los datos del formulario, por ejemplo, enviarlos a un servidor para su procesamiento
     // Limpiar el formulario después de guardar los datos
-        var formulario = document.getElementById('formulario-producto');
-        var modal = document.getElementById('modal');
-        modal.style.display = 'block';
+    
+      var formData = new FormData();
+      formData.append("id_producto", id_producto);
+      formData.append("nombre", nombre);
+      formData.append("precio", precio);
+      formData.append("descripcion", descripcion);
+      formData.append("cantidad", cantidad);
+      formData.append("categoria", categoria);
+
+      // Hacer la petición POST al servidor utilizando fetch
+      fetch("/ventas/post_producto/", {
+        method: "POST",
+        body: formData
+      })
+      .then(function(response) {
+        // Manejar la respuesta del servidor
+        if (response.ok) {
+          // Mostrar mensaje de éxito
+          var modal = document.getElementById('modal');
+          modal.style.display = 'block'
+        } else {
+          // Mostrar mensaje de error
+          alert("Error al agregar datos");
+        }
+      })
+    .catch(function(error) {
+      // Mostrar mensaje de error
+      alert("Error al agregar datos");
+    });
         formulario.reset();
     });
+
     document.getElementById("miImagen").addEventListener("click", cerrarModal);
     function cerrarModal() {
       var modal = document.getElementById('modal');

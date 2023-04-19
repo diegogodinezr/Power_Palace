@@ -53,13 +53,14 @@ def post_producto(request):
         if form.is_valid():
             producto.objects.create(
                 id = request.POST["id"],
+                id_producto = request.POST["id_producto"],
                 nombre = request.POST["nombre"],
                 precio = request.POST["precio"],
                 descripcion = request.POST["descripcion"],
                 cantidad = request.POST["cantidad"],
                 categoria = request.POST["categoria"],
             )
-            return redirect('registrar_producto')
+            return redirect('/ventas/registrar_producto')
         else:
             form = productoform()
         return render(request,'registrar_productos.html')
