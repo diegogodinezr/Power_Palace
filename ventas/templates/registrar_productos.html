@@ -148,7 +148,7 @@
     <div id="contenedor-formulario">
         <form id="formulario-producto" method="post" action="/ventas/post_producto/" enctype="multipart/form-data">
           {% csrf_token %}
-          <input type="text" id="id" required required placeholder="ID producto">
+          <input type="text" id="id_producto" required required placeholder="ID producto">
           <input type="text" id="nombre" required placeholder="Nombre">
           <input type="number" id="precio" required placeholder="Precio">
           <input type="number" id="cantidad" required placeholder="Cantidad">
@@ -178,7 +178,7 @@
         e.preventDefault();
         // Obtener los valores de los campos del formulario
         var formulario = document.getElementById('formulario-producto');
-        var id_producto = document.getElementById('id').value;
+        var id_producto = document.getElementById('id_producto').value;
         var nombre = document.getElementById('nombre').value;
         var precio = document.getElementById('precio').value;
         var descripcion = document.getElementById('descripcion').value;

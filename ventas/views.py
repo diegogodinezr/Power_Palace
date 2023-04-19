@@ -52,7 +52,6 @@ def post_producto(request):
         form=productoform(request.POST,request.FILES)
         if form.is_valid():
             producto.objects.create(
-                id = request.POST["id"],
                 id_producto = request.POST["id_producto"],
                 nombre = request.POST["nombre"],
                 precio = request.POST["precio"],
