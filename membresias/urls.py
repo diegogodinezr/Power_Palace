@@ -11,4 +11,6 @@ urlpatterns = [
     path('loginm/', login_membresias, name="login_membresias"),
     path('verificacionID/', verificacionID, name="verificacionID"),
     path('logout/',LogoutView.as_view(next_page='/'), name='logout'),
+    path('registrar_usuarios/',registrar_usuarios, name="registrar_usuarios"),
+    path('post_usuarios/',post_usuarios, name="post_usuarios"),
 ]

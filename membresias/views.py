@@ -43,3 +43,45 @@ def verificacionID(request):
     }
     return render (request,template_to_return,context)
 
+#====================REGISTRO USUARIOS====================
+def registrar_usuarios(request):
+    template_to_return='registrar_usuarios.html'
+    formulario= clienteform()
+    consulta = cliente.objects.all()
+    context={ 
+        'view_name': "landing1",
+        'formulario': formulario,
+        'consulta': consulta,
+    }
+    return render (request,template_to_return,context)
+
+def post_usuarios(request):
+    if request.method=="POST":
+        form=clienteform(request.POST,request.FILES)
+        if form.is_valid():
+            cliente.objects.create(
+                nombre = request.POST["nombre"],
+                primer_apellido = request.POST["primer_apellido"],
+                segundo_apellido = request.POST["segundo_apellido"],
+                correo = request.POST["correo"],
+                telefono = request.POST["telefono"],
+            )
+            return redirect('/registrar_usuarios')
+        else:
+            form = clienteform()
+        return render(request,'registrar_usuarios.html')
+    
+def sacar_datos_usuarios(request, id):
+    objeto = cliente.objects.get(id=id)
+    id=id
+    formulario = clienteform(instance=objeto)
+    datos = {'formulario': formulario}
+    #falta agregar el updateproductor.html
+    html_form = render_to_string('updateusuarios.html', datos, request=request)
+    return HttpResponse(html_form,id)
+
+def removerusuarios(request):
+    idusuarios = request.POST["idusuarios"]
+    consulta = clienteform.objects.get(id=idusuarios)
+    consulta.delete()
+    return HttpResponse('usuario eliminado correctamente')
