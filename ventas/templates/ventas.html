@@ -2,19 +2,175 @@
 {% load static %}
 
 {% block content %}
-        <link rel="stylesheet" href="reset.css">
-        <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
-        <style>
+    <head>
+    <link rel="stylesheet" href="reset.css">
+    <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos de la tabla */
+        /* Estilos del contenedor de la tabla */
+        .contenido{
+            width: 90%;
+            margin: 0 auto;
+            text-align: center;
+            font-family: 'Magra', sans-serif;
             
-        </style>
-    </head>
-    <body>
-        <main>
-            <h1>ventas</h1>
-        </main>
-    </body>
+        }
+        .contenido h1{
+            font-size: 35px;
+        }
+        
+        .contenedor_buscar {
+            display: flex;
+            margin-top: 60px;
+        }
+        .contenedor_buscar img{
+            width: 38px;
+            height: 35px;
+            margin: 0 0 0 10px;
+        }
+        
+        .buscar {
+            width: 20%;
+            height: 40px;
+            background-color: #E6AF2E;
+            padding: 0 14px;
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-bottom: 20px;
+        }
+
+        #subtotal-container {
+            display: flex;
+            margin-left: 50%;
+        }
+
+        #subtotal-container p {
+            margin-right: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #subtotal {
+            border: 1px solid;
+            text-align: center;
+            font-size: 30px;
+            border-radius: 20px;
+        }
+        input{
+            border: 0;
+            text-align: center;
+            font-size: 30px;
+        }
+        input::placeholder {
+        font-weight: bold;
+        color: black; /* Cambiar el color del placeholder */
+        opacity: .8;
+    }
+        #tabla-container {
+        width: 70%;
+        margin: 0 auto; /* Centrar horizontalmente */
+        }
+
+        
+        /* Estilos de la tabla */
+        #tabla-productos {
+        width: 100%;
+        border-collapse: collapse;
+        }
+
+        #tabla-productos th{
+            background-color: #A3320B;
+            color: white;
+            font-size: 16px;
+        }
+
+        #tabla-productos td{
+            font-size: 16px;
+        }
+        #tabla-productos th,
+        #tabla-productos td {
+        border-top: 1px solid black;
+        padding: 8px 2px;
+        text-align: center;
+        }
+
+        .acciones{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .imagenes{
+            width: 30px;
+            height: 30px;
+            
+        }
+
+        .btnpago{
+            margin-top: 60px;
+        }
+        .pago{
+            font-size: 16px;
+            padding: 12px 60px;
+            border-radius: 20px;
+            border: 0;
+            width: 200px;
+            background-color: #E6AF2E;
+            cursor: pointer;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="contenido">
+            <div class="contenedor_buscar">
+                <img src="/media/buscar.png" alt="">
+                <div class="buscar">
+                  <input id="buscador" type="text" placeholder="Buscar">
+                </div>
+                <div id="subtotal-container">
+                  <p>SUBTOTAL</p>
+                  <input id="subtotal" type="number">
+                </div>
+              </div>
+            <div id="tabla-container">
+                <table id="tabla-productos">
+                    <thead>
+                      <tr>
+                        <th style="width: 25%;">Producto</th>
+                        <th style="width: 20%;">Precio</th>
+                        <th style="width: 20%;">Cantidad</th>
+                        <th style="width: 25%;">Subtotal</th>
+                        <th style="width: 10%;"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Filas de la tabla con datos -->
+                      <tr>
+                        <td>proteina</td>
+                        <td>20</td>
+                        <td>2</td>
+                        <td>40</td>
+                        <td><div id="eliminar" class="acciones"><img class="imagenes" src="/media/eliminar_tablas.png" alt=""></div></td>
+                      </tr>
+                    </tbody>
+                  </table>       
+            </div>
+            <p class="btnpago"><a href="/ventas/pago" class="pago">Elegir forma de pago</a></p>
+        </div>     
+    </main>
+</body>
 {% endblock content%}
 
 {% block js %}
-
+    <script>
+        // Obtener el botón de eliminar
+        var botonEliminar = document.getElementById("eliminar");
+        
+    </script>
 {% endblock js %}

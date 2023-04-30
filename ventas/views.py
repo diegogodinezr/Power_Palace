@@ -39,11 +39,11 @@ def interfaz_venta(request):
 def registrar_producto(request):
     template_to_return='registrar_productos.html'
     formulario= productoform()
-    #consulta = productoform.objects.all()
+    consulta = producto.objects.all()
     context={ 
         'view_name': "landing1",
         'formulario': formulario,
-        #'consulta': consulta,
+        'consulta': consulta,
     }
     return render (request,template_to_return,context)
   
@@ -64,30 +64,6 @@ def post_producto(request):
             form = productoform()
         return render(request,'registrar_productos.html')
     
-def updateproductor(request,id):
-    resultado=producto.objects.get(id=id)
-    id=id
-    form=productoform(instance=resultado)
-    template_to_return = "updateproductor.html"
-    if request.method=="POST":
-        form=productoform(request.POST,request.FILES)
-        if form.is_valid():
-            resultado.id = request.POST["id"]
-            resultado.nombre = request.POST["nombre"]
-            resultado.precio = request.POST["precio"]
-            resultado.descripcion = request.POST["descripcion"]
-            resultado.cantidad = request.POST["cantidad"]
-            resultado.categoria = request.POST["categoria"]
-            resultado.save()
-            return redirect("registrar_producto")
-
-    context={
-        'form':form,
-        'resultado':resultado,
-        'id':id,
-    }
-    return render (request, template_to_return,context)
-
 def sacar_datos_productor(request, id):
     objeto = producto.objects.get(id=id)
     id=id
@@ -111,9 +87,40 @@ def inventario(request):
     }
     return render (request,template_to_return,context)
 
+def updateproducto(request,id):
+    resultado=producto.objects.get(id=id)
+    id=id
+    form=productoform(instance=resultado)
+    template_to_return = "inventario.html"
+    if request.method=="POST":
+        form=productoform(request.POST,request.FILES)
+        if form.is_valid():
+            resultado.id_producto = request.POST["id_producto"]
+            resultado.nombre = request.POST["nombre"]
+            resultado.precio = request.POST["precio"]
+            resultado.descripcion = request.POST["descripcion"]
+            resultado.cantidad = request.POST["cantidad"]
+            resultado.categoria = request.POST["categoria"]
+            resultado.save()
+            return redirect("/ventas/updateproducto")
+
+    context={
+        'form':form,
+        'resultado':resultado,
+        'id':id,
+    }
+    return render (request, template_to_return,context)
+
 #====================VENTAS====================
 def ventas(request):
     template_to_return='ventas.html'
+    context={ 
+        'view_name': "landing1",
+    }
+    return render (request,template_to_return,context)
+
+def pago(request):
+    template_to_return='pago.html'
     context={ 
         'view_name': "landing1",
     }

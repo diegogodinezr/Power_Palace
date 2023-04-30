@@ -15,6 +15,8 @@ urlpatterns = [
     path('registrar_producto/',registrar_producto, name="registrar_producto"),
     path('post_producto/',post_producto, name="post_producto"),
     path('inventario/',inventario, name="inventario"),
+    path('updateproducto/',updateproducto, name="updateproducto"),
     path('ventas/',ventas, name="ventas"),
+    path('pago/',pago, name="pago"),
     path('historial_ventas/',historial_ventas, name="historial_ventas"),
 ]

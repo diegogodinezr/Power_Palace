@@ -1,0 +1,122 @@
+{% extends "base_v.html" %}
+{% load static %}
+
+{% block content %}
+
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
+        <style>
+            .contenido{
+                display: inline-flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 60%;
+                margin: 0 22% 0 18%; 
+            }
+            .formulario {
+                margin-top: 1px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 80vh;
+                width: 50vh;
+                background-color: white;
+                font-family: 'Magra', sans-serif;
+            }
+            #contenedor-formulario {
+                background-color: #791F00;
+                padding: 25px 0;
+                border-radius: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                max-width: 350px;
+                width: 100%;
+                margin: 0 auto; /* Agregar esta línea */
+                text-align: center; 
+            }
+        
+            #formulario-producto{
+                display: block;
+                margin: 10px auto; 
+                max-width: 220px; /* Agregar esta línea para limitar el ancho del formulario */
+                align-items: center;
+            }
+        
+            .cont {
+                margin-top: 30px;
+                font-size: 15px;
+            }
+
+            .opcion{
+                display: block;
+                margin:0 0 25px 12.5%;
+                width: 75% ; /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
+                height: 30px ;
+                color: black ; /* Establecer el color del texto en blanco */
+                border-radius: 30px ;
+                text-align: left;
+                border: black;
+                resize: none;
+                padding: 2px 0;
+                
+            }
+
+            .img_opciones{
+                float: left;
+                width: 40px;
+                height: 35px;
+                margin: 0 25px;
+            }
+
+            .compra,.carrito{
+                display: block;
+                margin: 0 0 25px 5%;
+                width: 90% ; /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
+                height: 30px ;
+                color: black ; /* Establecer el color del texto en blanco */
+                border-radius: 30px ;
+                text-align: center;
+                border: black;
+                resize: none;
+                padding: 2px 0;
+            }
+            .opcion,.carrito{
+                background-color: white;
+            }
+
+            .compra{
+                background-color: #E6AF2E;
+            }
+
+            .titulo{
+                font-size: 20px;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="contenido">
+                <div class="imagen">
+                    <img style="width: 380px; height: 380px;" src="/media/pago.png" alt="pago">
+                </div>
+                <div class=formulario>
+                    <div style="width: 100%; text-align: center;">
+                      <div id="contenedor-formulario">
+                          <form id="formulario-producto">
+                            <p class="titulo">Elige forma de pago</p>
+                            <p class="cont"><img class="img_opciones" src="/media/tarjeta.png" alt=""><a href="/ventas/pago" class="opcion">Tarjeta</a></p>
+                            <p class="cont"><img class="img_opciones" src="/media/efectivo.png" alt=""><a href="/ventas/pago" class="opcion">Efectivo</a></p>
+                            <p class="cont"><a href="/ventas/pago" class="compra">Finalizar compra</a></p>
+                            <p class="cont"><a href="/ventas/pago" class="carrito">Regresar a carrito</a></p>
+                          </form>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+        </main>
+    </body>
+{% endblock content %}
+
+{% block js %}
+
+{% endblock js %}
