@@ -6,6 +6,9 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.db.models import Q
+
 
 #====================HOME====================
 def home(request):
@@ -42,6 +45,30 @@ def verificacionID(request):
         'view_name': "landing1",
     }
     return render (request,template_to_return,context)
+
+def verificar_usuario(request):
+    nombre_o_id = request.GET.get('nombre_o_id', None)
+    if nombre_o_id:
+        # Separar los términos de búsqueda por espacios
+        terminos = nombre_o_id.split()
+        # Buscar por ID o por coincidencias en los campos de nombre y apellido
+        if len(terminos) == 1:
+            try:
+                usuario = cliente.objects.get(id=terminos[0])
+            except cliente.DoesNotExist:
+                usuario = None
+        else:
+            usuario = cliente.objects.filter(
+                Q(nombre__icontains=terminos[0]) & Q(primer_apellido__icontains=terminos[1])
+            ).first()
+        if usuario:
+            mensaje = f"Usuario encontrado: {usuario.nombre} {usuario.primer_apellido}"
+        else:
+            mensaje = "No se encontró ningún usuario con los datos ingresados."
+        context = {'mensaje': mensaje}
+        return render(request, 'verificar_usuario.html', context)
+    else:
+        return render(request, 'verificar_usuario.html')
 
 #====================REGISTRO USUARIOS====================
 def registrar_usuarios(request):
