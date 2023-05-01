@@ -8,6 +8,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-top: 50px;
     }
 
     .user_card {
@@ -142,39 +143,36 @@
     
 </style>
 
-<body>
-    <br>
-    <br>
-    <div class="container h-100">
-        <div class="row h-100 justify-content-center align-items-center">
+
+    <div class="container">
+        <div class="row justify-content-center mt-5">
             <div class="col-md-6 col-lg-4">
                 <div class="card user_card p-3">
                     <div class="card-body">
-                        <h3 id="form-title" class="text-center mb-4"
-                            style="display: flex; justify-content: center; top: 10px; position: absolute;transform: translate(17%, 10%);">Verificación de ID</h3>
-                        <form action="POST" method="get">
+                        <h3 id="form-title" class="text-center mb-4" style="display: flex; justify-content: center; position: absolute;left: 15%; top: 10%;">Verificación de ID</h3>
+                        <form action="/verificar_usuario" method="get">
                             {% csrf_token %}
                             <div class="textposi">
-                                <input type="text" name="nombre_o_id" placeholder="Nombre o ID del usuario:"
-                                    id="nombre_o_id" class="textarea" style="width: 150px;">
+                                <input type="search" name="nombre_o_id" placeholder="Nombre o ID del usuario:" id="nombre_o_id" class="textarea" style="width: 150px;">
                             </div>
                             <div class="separados">
                                 <input type="submit" value="Verificar" class="botones">
-                                <a href="/registrar_usuarios"><input type="button" value="Registrar"
-                                        class="botones"></a>
+                                <a href="/registrar_usuarios"><input type="button" value="Registrar" class="botones"></a>
                             </div>
                             <div class="centrado">
                                 <a href="/pagar"><input type="button" value="Pagar" class="botones"></a>
                             </div>
                         </form>
+                        {% if mensaje %}
+                            <p class="text-center mt-4">{{ mensaje }}</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-</body>
-{% endblock content%}
+    
+{% endblock %}
 
 {% block js %}
 
