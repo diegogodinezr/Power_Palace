@@ -18,5 +18,6 @@ urlpatterns = [
     path('updateproducto/',updateproducto, name="updateproducto"),
     path('ventas/',ventas, name="ventas"),
     path('pago/',pago, name="pago"),
+    path('metodo_pago/',metodo_pago, name="metodo_pago"),
     path('historial_ventas/',historial_ventas, name="historial_ventas"),
 ]

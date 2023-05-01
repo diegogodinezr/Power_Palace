@@ -126,6 +126,13 @@ def pago(request):
     }
     return render (request,template_to_return,context)
 
+def metodo_pago(request):
+    template_to_return='metodo_pago.html'
+    context={ 
+        'view_name': "landing1",
+    }
+    return render (request,template_to_return,context)
+
 #====================HISTORIAL VENTAS====================
 def historial_ventas(request):
     template_to_return='historial_ventas.html'
