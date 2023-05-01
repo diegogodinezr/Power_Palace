@@ -148,11 +148,11 @@
     <div id="contenedor-formulario">
         <form id="formulario-usuarios" method="post" action="/post_usuarios/" enctype="multipart/form-data">
           {% csrf_token %}
-          <input type="text" id="nombre" required placeholder="Nombre">
-          <input type="text" id="primer_ap" required placeholder="Primer apellido">
-          <input type="text" id="segundo_ap" required placeholder="Segundo apellido">
-          <input type="text" id="correo" required placeholder="Correo electronico">
-          <input type="number" id="telefono" required placeholder="Telefono">
+          <input type="text" id="nombre" name="nombre" required placeholder="Nombre">
+          <input type="text" id="primer_ap" name="primer_apellido" required placeholder="Primer apellido">
+          <input type="text" id="segundo_ap" name="segundo_apellido" required placeholder="Segundo apellido">
+          <input type="text" id="correo" name="correo" required placeholder="Correo electronico">
+          <input type="number" id="telefono" name="telefono" required placeholder="Telefono">
           <button type="submit">Guardar</button>
         </form>
       </div>
@@ -178,8 +178,8 @@
         // Obtener los valores de los campos del formulario
         var formulario = document.getElementById('formulario-usuarios');
         var nombre = document.getElementById('nombre').value;
-        var primer_ap = document.getElementById('primer_ap').value;
-        var segundo_ap = document.getElementById('segundo_ap').value;
+        var primer_apellido = document.getElementById('primer_apellido').value;
+        var segundo_apellido = document.getElementById('segundo_apellido').value;
         var correo = document.getElementById('correo').value;
         var telefono=document.getElementById('telefono').value;
         if (!Number.isInteger(parseFloat(telefono))) {
@@ -191,8 +191,8 @@
     
       var formData = new FormData();
       formData.append("nombre", nombre);
-      formData.append("primer_ap", primer_ap);
-      formData.append("segundo_ap", segundo_ap);
+      formData.append("primer_apellido, primer_apellido");
+      formData.append("segundo_apellido", segundo_apellido);
       formData.append("correo", correo);
       formData.append("telefono", telefono);
 
