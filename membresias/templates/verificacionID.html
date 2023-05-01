@@ -101,6 +101,44 @@
         grid-row: 2;
         /* Hace que el botón "Pagar" ocupe la segunda fila */
     }
+
+    .botones {
+        cursor: pointer;
+    }
+
+    .separados {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 20px;
+    }
+
+    .centrado {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .textarea {
+        display: block !important;
+        margin: 0 0 25px !important;
+        width: 70% !important;
+        /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
+        height: 30px !important;
+        background-color: rgba(255, 255, 255, 0.3) !important;
+        /* Cambiar opacity por rgba */
+        color: #FFFFFF !important;
+        /* Establecer el color del texto en blanco */
+        border-radius: 30px !important;
+        text-align: center !important;
+        border: black !important;
+        resize: none;
+    }
+
+    .textposi {
+        display: flex;
+        justify-content: center;
+        margin-top: 25%;
+    }
 </style>
 
 <body>
@@ -112,16 +150,20 @@
                 <div class="card user_card p-3">
                     <div class="card-body">
                         <h3 id="form-title" class="text-center mb-4"
-                            style="display: flex; justify-content: center; margin-bottom: 50px;">Verificación de ID</h3>
-                        <form method="POST" action="">
+                            style="display: flex; justify-content: center; top: 10px; position: absolute;transform: translate(17%, 10%);">Verificación de ID</h3>
+                        <form action="POST" method="get">
                             {% csrf_token %}
-                            <div class="">
-                                <input type="text" name="id" placeholder="ID DE USUARIO O NOMBRE" class="form-control">
+                            <div class="textposi">
+                                <input type="text" name="nombre_o_id" placeholder="Nombre o ID del usuario:"
+                                    id="nombre_o_id" class="textarea" style="width: 150px;">
                             </div>
-                            <div class="main">
-                                <input type="button" value="Verificar" class="botones">
-                                <a href="/registrar_usuarios"><input type="button" value="Registrar" class="botones"></a>
-                                <input type="button" value="Pagar" class="botones wide">
+                            <div class="separados">
+                                <input type="submit" value="Verificar" class="botones">
+                                <a href="/registrar_usuarios"><input type="button" value="Registrar"
+                                        class="botones"></a>
+                            </div>
+                            <div class="centrado">
+                                <a href="/pagar"><input type="button" value="Pagar" class="botones"></a>
                             </div>
                         </form>
                     </div>
