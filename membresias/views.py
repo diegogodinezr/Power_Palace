@@ -85,3 +85,11 @@ def removerusuarios(request):
     consulta = clienteform.objects.get(id=idusuarios)
     consulta.delete()
     return HttpResponse('usuario eliminado correctamente')
+
+#====================Pago====================
+def pagar(request):
+    template_to_return='pagar.html'
+    context={ 
+        'view_name': "landing1",
+    }
+    return render (request,template_to_return,context)

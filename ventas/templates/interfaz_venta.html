@@ -35,11 +35,16 @@
             }
 
             .grupo1:hover .imagenes{
-                transition: 1s;
+                transition: 3s;
+                transform: translateY(-10px);
             }
             .grupo2:hover .imagenes{
-                transition: 400ms;
+                transition: 3s;
                 transform: translateY(-35px);
+            }
+            .grupo3:hover .imagenes{
+                transition: 3s;
+                transform: translateY(-5px);
             }
             .items:hover .producto-descripcion {
                 display: block;
@@ -96,7 +101,7 @@
     <body>
         <main>
             <div class="servicios">
-                <div class="items grupo1">
+                <div class="items grupo3">
                     <a href="/ventas/registrar_producto">
                         <img src="/media/productos.png" class="imagenes">
                         <p class="producto-descripcion">Agregar<br>Productos</p>
