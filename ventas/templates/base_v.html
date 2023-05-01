@@ -235,8 +235,9 @@
     <nav class="sizenav">
 		<div class="logo">
 			<div>
-				<a class="material-symbols-outlined icosize" href="/">arrow_circle_left</a>
-			</div>
+                <a id="btn-back" class="material-symbols-outlined icosize" href="/">arrow_circle_left</a>
+            </div>
+            
 			<div>
 				<img src="/media/icono-logo.ico" alt="" class="icono">
 				<img src="/media/Letras-logo.png" alt="" class="letras">
@@ -279,6 +280,11 @@
             // swipeable:true,
 
         });
+        document.getElementById("btn-back").addEventListener("click", function(event) {
+            event.preventDefault(); // Evita que el enlace navegue a la página principal
+            history.back(); // Retrocede en el historial del navegador
+        });
+
 
         $(document).ready(function () {
             $('select').formSelect();
