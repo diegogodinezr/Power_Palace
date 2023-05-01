@@ -8,4 +8,4 @@ class producto(models.Model):
     precio = models.FloatField()
     descripcion = models.CharField(max_length=200)
     cantidad = models.IntegerField()
-    categoria = models.CharField(max_length=70)
+    categoria = models.CharField(max_length=70)   
