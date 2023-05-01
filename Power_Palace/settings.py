@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'Power_Palace.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Power', #Nombre de la base de datos creada llamada PP por power_palace
+        'NAME': 'PP', #Nombre de la base de datos creada llamada PP por power_palace
         'USER':'root',
         'HOST':'127.0.0.1',
         'OPTIONS':{
