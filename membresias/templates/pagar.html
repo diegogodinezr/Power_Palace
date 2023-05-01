@@ -102,7 +102,11 @@
             font-size: 20px;
             color: white;
         }
-        
+
+        .opcion.clicked {
+            background-color: #E6AF2E;
+            color: white;
+        }
     </style>
 </head>
 
@@ -117,10 +121,12 @@
                     <div id="contenedor-formulario">
                         <form id="formulario-producto">
                             <p class="titulo">Elige forma de pago</p>
-                            <p class="cont opc"><img class="img_opciones" src="/media/tarjeta.png" alt="">Tarjeta</p>
-                            <p class="cont opc"><img class="img_opciones" src="/media/efectivo.png" alt="">Efectivo</p>
+                            <p class="cont"><img class="img_opciones" src="/media/tarjeta.png" alt=""><a
+                                    href="/ventas/pago" class="opcion">Tarjeta</a></p>
+                            <p class="cont"><img class="img_opciones" src="/media/efectivo.png" alt=""><a
+                                    href="/ventas/pago" class="opcion">Efectivo</a></p>
                             <p class="cont"><a href="/ventas/pago" class="compra">Finalizar compra</a></p>
-                            <p class="cont"><a href="/ventas/pago" class="carrito">Regresar a carrito</a></p>
+                            <p class="cont"><a href="#" onclick="history.back()" class="carrito">Regresar</a></p>
                         </form>
                     </div>
                 </div>
@@ -131,5 +137,17 @@
 {% endblock content %}
 
 {% block js %}
+<script>
+    const opciones = document.querySelectorAll('.cont a');
+    opciones.forEach(opcion => {
+        opcion.addEventListener('click', e => {
+            e.preventDefault();
+            opciones.forEach(op => {
+                op.classList.remove('clicked');
+            });
+            e.target.classList.add('clicked');
+        });
+    });
+</script>
 
 {% endblock js %}
