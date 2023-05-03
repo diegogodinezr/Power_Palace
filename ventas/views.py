@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .forms import *
 from .models import *
 from django.shortcuts import redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -37,15 +37,19 @@ def interfaz_venta(request):
 
 #====================PRODUCTO====================
 def registrar_producto(request):
-    template_to_return='registrar_productos.html'
-    formulario= productoform()
+    if request.method == 'POST':
+        formulario = productoform(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+    else:
+        formulario = productoform()
     consulta = producto.objects.all()
-    context={ 
+    context = {
         'view_name': "landing1",
         'formulario': formulario,
         'consulta': consulta,
     }
-    return render (request,template_to_return,context)
+    return render(request, 'registrar_productos.html', context)
   
 def post_producto(request):
     if request.method=="POST":
@@ -80,12 +84,14 @@ def removerproductor(request):
     return HttpResponse('producto eliminado correctamente')
 
 #====================INVENTARIO====================
+
 def inventario(request):
-    template_to_return='inventario.html'
+    productos = producto.objects.all()
     context={ 
         'view_name': "landing1",
+        'productos': productos
     }
-    return render (request,template_to_return,context)
+    return render (request,'inventario.html',context)
 
 def updateproducto(request,id):
     resultado=producto.objects.get(id=id)
@@ -110,6 +116,11 @@ def updateproducto(request,id):
         'id':id,
     }
     return render (request, template_to_return,context)
+
+def buscar_productos(request):
+    query = request.GET.get('q', '')
+    productos = producto.objects.filter(nombre__icontains=query).values('id_producto', 'nombre', 'precio')
+    return JsonResponse({'productos': list(productos)})
 
 #====================VENTAS====================
 def ventas(request):

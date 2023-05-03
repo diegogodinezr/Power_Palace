@@ -179,12 +179,83 @@
         </div>
     </main>
 </body>
-{% endblock content%}
-
+{% endblock %}
 {% block js %}
 <script>
-    // Obtener el botón de eliminar
-    var botonEliminar = document.getElementById("eliminar");
+    const buscador = document.querySelector('#buscador');
+    const resultados = document.querySelector('#resultados');
+    const tablaProductos = document.querySelector('#tabla-productos tbody');
+    const subtotalInput = document.querySelector('#subtotal');
+
+    buscador.addEventListener('input', () => {
+        const query = buscador.value.trim();
+        if (query.length >= 3) {
+            fetch(`/buscar_productos/?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultados.innerHTML = '';
+                    data.productos.forEach(producto => {
+                        const opcion = document.createElement('div');
+                        opcion.classList.add('opcion');
+                        opcion.innerHTML = `
+                            <p class="nombre">${producto.nombre}</p>
+                            <p class="precio">$${producto.precio.toFixed(2)}</p>
+                        `;
+                        opcion.addEventListener('click', () => {
+                            agregarProducto(producto);
+                            buscador.value = '';
+                            resultados.innerHTML = '';
+                        });
+                        resultados.appendChild(opcion);
+                    });
+                    if (data.productos.length === 0) {
+                        resultados.innerHTML = '<p>No se encontraron productos.</p>';
+                    }
+                });
+        } else {
+            resultados.innerHTML = '';
+        }
+    });
+
+    function agregarProducto(producto) {
+        const id = producto.id;
+        const nombre = producto.nombre;
+        const productosEnTabla = tablaProductos.querySelectorAll('tr');
+        let productoEnTabla = null;
+        productosEnTabla.forEach((fila) => {
+            if (idEnTabla == id) {
+                productoEnTabla = fila;
+            }
+        });
+        if (productoEnTabla) {
+            // Si el producto ya está en la tabla, aumentar su cantidad y actualizar el subtotal
+            const cantidadInput = productoEnTabla.querySelector('.cantidad');
+            const cantidadActual = Number(cantidadInput.value);
+            const cantidadNueva = cantidadActual + cantidad;
+            cantidadInput.value = cantidadNueva;
+            const precioTotal = precio * cantidadNueva;
+            productoEnTabla.querySelector('.precio-total').textContent = `$${precioTotal.toFixed(2)}`;
+        } else {
+            // Si el producto no está en la tabla, agregar una nueva fila con el producto y actualizar el subtotal
+            const precioTotal = precio * cantidad;
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+            <td>${nombre}</td>
+            <td>$${precio.toFixed(2)}</td>
+            <td><input type="number" class="cantidad" value="${cantidad}" min="1"></td>
+            <td>$${precioTotal.toFixed(2)}</td>
+            <td><button class="btn-eliminar">Eliminar</button></td>
+            <input type="hidden" class="id-producto" value="${id}">
+        `;
+            tablaProductos.appendChild(nuevaFila);
+        }
+        const preciosTotales = tablaProductos.querySelectorAll('.precio-total');
+        let subtotal = 0;
+        preciosTotales.forEach((precioTotal) => {
+            subtotal += Number(precioTotal.textContent.substring(1));
+        });
+        subtotalInput.textContent = `$${subtotal.toFixed(2)}`;
+    }
 
 </script>
 {% endblock js %}
