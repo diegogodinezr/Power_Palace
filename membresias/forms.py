@@ -6,3 +6,8 @@ class clienteform(forms.ModelForm):
     class Meta:
         model = cliente
         fields = '__all__'
+
+class pagoform(forms.ModelForm):
+    class Meta:
+        model = pago
+        fields = '__all__'

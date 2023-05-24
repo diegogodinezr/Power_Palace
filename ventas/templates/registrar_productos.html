@@ -172,59 +172,14 @@
 {% endblock content %}
 </html>
 
-
+{% block js %}
+    
 <script>
-    document.getElementById('formulario-producto').addEventListener('submit', function(e) {
-        e.preventDefault();
-        // Obtener los valores de los campos del formulario
-        var formulario = document.getElementById('formulario-producto');
-        var id_producto = document.getElementById('id_producto').value;
-        var nombre = document.getElementById('nombre').value;
-        var precio = document.getElementById('precio').value;
-        var descripcion = document.getElementById('descripcion').value;
-        var cantidad = document.getElementById('cantidad').value;
-        var categoria=document.getElementById('categoria').value;
-        if (!Number.isInteger(parseFloat(cantidad))) {
-            // Si no es un número entero, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
-            console.error('La cantidad debe ser un número entero.');
-        }
-        // Aquí puedes hacer lo que necesites con los datos del formulario, por ejemplo, enviarlos a un servidor para su procesamiento
-    // Limpiar el formulario después de guardar los datos
-    
-      var formData = new FormData();
-      formData.append("id_producto", id_producto);
-      formData.append("nombre", nombre);
-      formData.append("precio", precio);
-      formData.append("descripcion", descripcion);
-      formData.append("cantidad", cantidad);
-      formData.append("categoria", categoria);
-
-      // Hacer la petición POST al servidor utilizando fetch
-      fetch("/ventas/post_producto/", {
-        method: "POST",
-        body: formData
-      })
-      .then(function(response) {
-        // Manejar la respuesta del servidor
-        if (response.ok) {
-          // Mostrar mensaje de éxito
-          var modal = document.getElementById('modal');
-          modal.style.display = 'block'
-        } else {
-          // Mostrar mensaje de error
-          alert("Error al agregar datos");
-        }
-      })
-    .catch(function(error) {
-      // Mostrar mensaje de error
-      alert("Error al agregar datos");
-    });
-        formulario.reset();
-    });
-    
     document.getElementById("miImagen").addEventListener("click", cerrarModal);
     function cerrarModal() {
       var modal = document.getElementById('modal');
       modal.style.display = 'none';
     }
 </script>
+
+{% endblock js %}

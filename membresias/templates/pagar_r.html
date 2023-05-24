@@ -155,7 +155,7 @@
             // Aquí puedes hacer algo con el método de pago seleccionado, como enviarlo como parámetro a través de una petición AJAX o redirigir a otra página con el método de pago seleccionado en la URL.
 
             // Ejemplo de redirección con método de pago seleccionado en la URL
-            var direccion = '/pago_membresia?metodo_pago=' + encodeURIComponent(metodoPago);
+            var direccion = '/renovar?metodo_pago=' + encodeURIComponent(metodoPago);
             $.ajax({
                 url: direccion,
                 data: { 'metodo_pago': metodoPago },

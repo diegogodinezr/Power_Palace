@@ -1,0 +1,90 @@
+{% extends "base_m.html" %}
+{% load static %}
+
+{% block content %}
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos de la tabla */
+        /* Estilos del contenedor de la tabla */
+        .contenido {
+            width: 90%;
+            margin: 0 auto;
+            text-align: center;
+            font-family: 'Magra', sans-serif;
+
+        }
+
+        .contenido h1 {
+            font-size: 35px;
+            margin-bottom: 50px;
+        }
+
+        #tabla-container {
+            width: 100%;
+            margin: 0 auto;
+            /* Centrar horizontalmente */
+        }
+
+        /* Estilos de la tabla */
+        #tabla-productos {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #tabla-productos th {
+            background-color: #001514;
+            color: white;
+            font-size: 16px;
+        }
+
+        #tabla-productos td {
+            font-size: 16px;
+        }
+
+        #tabla-productos th,
+        #tabla-productos td {
+            border: 1px solid black;
+            padding: 8px 2px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="contenido">
+            <h1>Historial membresias</h1>
+            <div id="tabla-container">
+                <table id="tabla-productos">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">ID pago</th>
+                            <th style="width: 20%;">Id usuario</th>
+                            <th style="width: 20%;">fecha ùltimo pago</th>
+                            <th style="width: 20%;">fecha Limite</th>
+                            <th style="width: 20%;">precio </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pago in pagos %}
+                        <tr>
+                            <td>{{ pago.id }}</td>
+                            <td>{{ pago.id_cliente  }}</td>
+                            <td>{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+                            <td>{{ pago.fecha_limite|date:"d/m/Y" }}</td>
+                            <td>{{ pago.precio_pago }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    {% endblock content%}
+
+    {% block js %}
+
+    {% endblock js %}
