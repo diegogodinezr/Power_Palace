@@ -226,3 +226,80 @@ def historial(request):
         'pagos': pagos
     }
     return render (request,'historial_membresias.html',context)
+
+def filtros(request):
+    formulario = pagoform()
+    consulta = pago.objects.all()
+    if request.method == 'GET':
+        id_pago = request.GET.get('idpago')
+        id_usuario = request.GET.get('usuario')
+        ultimopago = request.GET.get('ultimopago')
+        fechalimita = request.GET.get('fechalimita')
+        precio = request.GET.get('precio')
+
+        if id_pago:
+            consulta = consulta.filter(id=id_pago)
+        if id_usuario:
+            consulta = consulta.filter(id_cliente=id_usuario)
+        if ultimopago:
+            consulta = consulta.filter(fecha_pago=ultimopago)
+        if fechalimita:
+            consulta = consulta.filter(fecha_limite=fechalimita)
+        if precio:
+            consulta = consulta.filter(precio_pago=precio)
+
+    if not consulta.exists():
+        messages.info(request, 'No se encontraron resultados.')
+
+    context = {
+        "formulario": formulario,
+        "pagos": consulta,
+    }
+
+    return render(request, 'historial_membresias.html', context)
+
+def eliminarpago(request):
+    data_idz = request.GET.get("data_idz")
+    consulta = pago.objects.get(id=data_idz)
+    ecliente = consulta.id_cliente
+    rcliente = cliente.objects.get(id=ecliente)
+    consulta.delete()
+    rcliente.delete()
+    messages.success(request, 'El pago se ha modificado correctamente.')
+    return render(request,'historial_membresias.html')
+
+def modificar_historial(request):
+    if request.method == 'POST':
+        id_pago = request.POST.get('id_pago')
+        id_cliente = request.POST.get('cliente')
+        costo = request.POST.get('pago')
+        ivam = (float(costo)/1.16)*.16
+        subtotalm = float(costo) - ivam
+        try:
+            cliente_obj = cliente.objects.get(id=id_cliente)
+            try:
+
+                pago_obj = pago.objects.get(id=id_pago)
+                pago_obj.id_cliente = id_cliente
+                pago_obj.precio_pago = costo
+                pago_obj.iva = ivam
+                pago_obj.subtotal = subtotalm
+                pago_obj.save()
+                
+                
+                messages.success(request, 'El pago se ha modificado correctamente.')
+                return redirect('/historial')
+            except pago.DoesNotExist:
+                messages.error(request, 'El pago no existe.')
+                return redirect('/historial')
+        except cliente.DoesNotExist:
+                messages.error(request, 'El usuario asignado al pago no existe.')
+                return redirect('/historial')
+    consulta = pago.objects.all()
+    context = {
+        "pagos": consulta,
+    }
+
+    return render(request, 'historial_membresias.html', context)
+
+

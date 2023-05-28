@@ -22,4 +22,7 @@ urlpatterns = [
     path('modificar_pago/',modificar_pago, name="modificar_pago"),
     path('renovar/',renovar, name="renovar"),
     path('historial/',historial, name="historial"),
+    path('filtros/',filtros, name="filtros"),
+    path('eliminarpago/',eliminarpago, name="eliminarpago"),
+    path('modificar_historial/',modificar_historial, name="modificar_historial"),
 ]
