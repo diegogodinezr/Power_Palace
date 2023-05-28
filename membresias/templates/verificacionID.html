@@ -236,9 +236,11 @@
                                 <input type="submit" value="Verificar" class="botones">
                                 <a href="/registrar_usuarios"><input type="button" value="Registrar" class="botones"></a>
                             </div>
-                            <div class="centrado">
-                                <a href="/pagar_r"><input type="button" value="Pagar" class="botones"></a>
+                            <div class="separados">
+                                    <a href="/pagar_r"><input type="button" value="Pagar" class="botones"></a>
+                                    <a href="/historial"><input type="button" value="historial" class="botones"></a>
                             </div>
+                            
                         </form>
                     </div>
                 </div>
@@ -254,6 +256,8 @@
     <script>
          // Capturar el enlace de cierre
         var enlaceCerrar = document.getElementById('cerrar');
+        var atencion = document.getElementById('nombre_o_id');
+        atencion.focus()
         // Agregar el evento click al enlace de cierre
         enlaceCerrar.addEventListener('click', function(event) {
         event.preventDefault(); // Prevenir el comportamiento predeterminado del enlace
