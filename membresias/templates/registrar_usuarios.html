@@ -71,22 +71,10 @@
         border-radius: 30px;
         width: 100px;
       }
-  
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.2); /* Fondo oscuro semitransparente */
-        z-index: 9999; /* Asegurarse de que el modal esté por encima del resto del contenido */
-      }
-  
-  .modal-contenido {
+      .modal-contenido {
         font-family: 'Magra', sans-serif;
-        width: 340px;
-        height: 120px;
+        width: 400px;
+        height: 130px;
         background-color: #001514;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         position: absolute;
@@ -139,6 +127,14 @@
         padding: 4px 6px;
         border: 0;
       }
+
+      #messages a{
+        background-color: white;
+        color: black;
+        border-radius: 10px;
+        padding: 0 10px;
+
+      }
     </style>
 
 </head>
@@ -157,71 +153,22 @@
         </form>
       </div>
   </div>
-</div>
-<div id="modal" class="modal">
-  <div class="modal-contenido">
-    <div class="modal-cerrar">
-      <img src="/media/cerrar.png" id="miImagen" alt="cerrar">
+  {% for message in messages %}
+  <div class="ventana" id="miVentana" style="position: absolute; bottom: 250px; left: 50%;">
+    <div class="modal-contenido">
+      <div class="modal-cerrar">
+        <a href="/verificacionID"><img src="/media/cerrar.png" id="cerrar" alt="cerrar"></a>
+      </div>
+      <p id="messages">{{ message|safe }}</p>
     </div>
-    <p>Producto registrado correctamente</p>
-    <button class="botones-modal" onclick="cerrarModal()">Registrar nuevo usuario</button>
-    <button class="botones-modal" onclick="cerrarModal()">Finalizar</button> <!-- Agregar un botón para cerrar el modal -->
+  </div>      
   </div>
+  {% endfor %} 
 </div>
+
 {% endblock content %}
 </html>
 
+{% block js %}
 
-<script>
-    document.getElementById('formulario-usuarios').addEventListener('submit', function(e) {
-        e.preventDefault();
-        // Obtener los valores de los campos del formulario
-        var formulario = document.getElementById('formulario-usuarios');
-        var nombre = document.getElementById('nombre').value;
-        var primer_apellido = document.getElementById('primer_apellido').value;
-        var segundo_apellido = document.getElementById('segundo_apellido').value;
-        var correo = document.getElementById('correo').value;
-        var telefono=document.getElementById('telefono').value;
-        if (!Number.isInteger(parseFloat(telefono))) {
-            // Si no es un número entero, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
-            console.error('El telefono debe ser un número entero.');
-        }
-        // Aquí puedes hacer lo que necesites con los datos del formulario, por ejemplo, enviarlos a un servidor para su procesamiento
-    // Limpiar el formulario después de guardar los datos
-    
-      var formData = new FormData();
-      formData.append("nombre", nombre);
-      formData.append("primer_apellido, primer_apellido");
-      formData.append("segundo_apellido", segundo_apellido);
-      formData.append("correo", correo);
-      formData.append("telefono", telefono);
-
-      // Hacer la petición POST al servidor utilizando fetch
-      fetch("/post_usuarios/", {
-        method: "POST",
-        body: formData
-      })
-      .then(function(response) {
-        // Manejar la respuesta del servidor
-        if (response.ok) {
-          // Mostrar mensaje de éxito
-          var modal = document.getElementById('modal');
-          modal.style.display = 'block'
-        } else {
-          // Mostrar mensaje de error
-          alert("Error al agregar datos");
-        }
-      })
-    .catch(function(error) {
-      // Mostrar mensaje de error
-      alert("Error al agregar datos");
-    });
-        formulario.reset();
-    });
-    
-    document.getElementById("miImagen").addEventListener("click", cerrarModal);
-    function cerrarModal() {
-      var modal = document.getElementById('modal');
-      modal.style.display = 'none';
-    }
-</script>
+{% endblock js %}

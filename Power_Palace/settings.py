@@ -52,7 +52,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Power_Palace.urls'
-
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
