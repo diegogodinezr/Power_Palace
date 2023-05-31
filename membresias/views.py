@@ -239,7 +239,7 @@ def modificar_pago(request):
 def historial(request):
     pagos = pago.objects.all()
     context={ 
-        'view_name': "landing1",
+        'view_name': "landing1", 
         'pagos': pagos
     }
     return render (request,'historial_membresias.html',context)
