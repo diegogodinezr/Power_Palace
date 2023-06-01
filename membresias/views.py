@@ -6,12 +6,9 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.contrib.auth.models import User
-from django.db.models import Q
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from django.utils.safestring import mark_safe
-
-
+from django.core.mail import EmailMessage
 #====================HOME====================
 def home(request):
     template_to_return='home.html'
@@ -167,6 +164,7 @@ def post_pago(request):
         fecha_siguiente = fpago + timedelta(days=30)
         ultimo_cliente = cliente.objects.latest('id')
         ultimo_cliente_id = ultimo_cliente.id
+        correoe = ultimo_cliente.correo
         formato_fecha = fpago.strftime("%d/%m/%Y")
         pago.objects.create(
             id_cliente = ultimo_cliente_id,
@@ -177,11 +175,21 @@ def post_pago(request):
             subtotal = request.POST["subtotal"],
             metodo = request.POST["metodo"],
         )
-        
-        messages.info(request, mark_safe('Usuario añadido correctamente.<br>Su ID es:<br><a>' + str(ultimo_cliente_id) + '</a><br><a>' + str(formato_fecha) + '</a>'))
-        return render(request,'registrar_usuarios.html')
+        expira = fecha_siguiente.strftime("%d/%m/%Y")
+        mensaje=EmailMessage("Pago Mensualidad",
+        "Pago confirmado!\n su id es: {} \nfecha de inscripción: {} \n Fecha límite: {}".format(ultimo_cliente_id, formato_fecha, expira), 
+        'POWER_PALACE',
+        [correoe], 
+        reply_to=['gera35san@gmail.com'])
+        try:
+            mensaje.send()
+            messages.info(request, mark_safe('Usuario añadido corectamente! <br>Su ID es:<br><a>' + str(ultimo_cliente_id) + '</a><br><a>' + str(formato_fecha) + '</a>'))
+            return render(request,'registrar_usuarios.html')
+        except:
+            return render(request,'pago_membresia.html')
+       
     else:
-        render(request,'pago_membresia.html')
+        return render(request,'pago_membresia.html')
     
 def regresar(request):
     ultimo_cliente = cliente.objects.latest('id')
@@ -193,7 +201,9 @@ def regresar(request):
     return render (request,template_to_return,context)
 
 def modificar_pago(request):
-    cliente = request.session.get('id_cliente')  # Obtener el ID del cliente desde la sesión
+    clienteid = request.session.get('id_cliente')  # Obtener el ID del cliente desde la sesión
+    usuario = cliente.objects.get(id = clienteid)
+    correoe = usuario.correo
     # Aquí puedes realizar la lógica para modificar el pago utilizando el id_cliente
     if request.method=="POST":
         fpago = datetime.now()
@@ -209,12 +219,19 @@ def modificar_pago(request):
         pago_existente.metodo = request.POST["metodo"]
         pago_existente.save()
 
-        messages.info(request, mark_safe('Renovación exitosa del usuario!<br>Su ID es:<br><a>' + str(cliente) + '</a><br><a>' + str(formato_fecha) + '</a>'))
-        return render(request,'registrar_usuarios.html')
-    else:
-        render(request,'pago_membresia.html')
-    # Eliminar el ID del cliente de la sesión después de utilizarlo, si es necesario
-
+        expira = fecha_siguiente.strftime("%d/%m/%Y")
+        mensaje=EmailMessage("Pago Mensualidad",
+        "Pago confirmado!\n su id es: {} \nfecha de pago: {} \n Fecha límite: {}".format(clienteid, formato_fecha, expira), 
+        'POWER_PALACE',
+        [correoe], 
+        reply_to=['gera35san@gmail.com'])
+        try:
+            mensaje.send()
+            messages.info(request, mark_safe('Renovación exitosa del usuario!<br>Su ID es:<br><a>' + str(clienteid) + '</a><br><a>' + str(formato_fecha) + '</a>'))     
+            return render(request,'registrar_usuarios.html')
+        except:
+            return render(request,'pago_membresia.html')
+        
     del request.session['id_cliente']
 
     return render(request, 'pago_membresia.html')
@@ -222,7 +239,7 @@ def modificar_pago(request):
 def historial(request):
     pagos = pago.objects.all()
     context={ 
-        'view_name': "landing1",
+        'view_name': "landing1", 
         'pagos': pagos
     }
     return render (request,'historial_membresias.html',context)

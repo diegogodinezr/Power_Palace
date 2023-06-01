@@ -156,7 +156,6 @@ def pago(request):
         'view_name': "landing1",
     }
     return render (request,template_to_return,context)
-   
 
 def metodo_pago(request):
     metodo_pago = request.GET.get('metodo_pago')
@@ -165,7 +164,7 @@ def metodo_pago(request):
         'metodo_pago': metodo_pago,
     }
     return render(request, 'metodo_pago.html', context)
-    
+
 #====================HISTORIAL VENTAS====================
 def historial_ventas(request):
     template_to_return='historial_ventas.html'
