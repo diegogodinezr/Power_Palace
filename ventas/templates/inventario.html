@@ -328,8 +328,7 @@
         <div style="width: 100%; text-align: center;">
             <h1 style="font-size: 35px; padding-bottom: 5px;">Modificar producto</h1>
             <div id="contenedor-formulario">
-                <form id="formulario-producto" method="post" action="/ventas/updateproducto/"
-                    enctype="multipart/form-data">
+                <form id="formulario-producto" method="post" action="updateproducto/" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input class="ingresar" type="text" id="id_producto" required required placeholder="ID producto">
                     <input class="ingresar" type="text" id="nombre" required placeholder="Nombre">
@@ -343,40 +342,40 @@
         </div>
     </div>
 </div>
-    {% endblock content%}
+{% endblock content%}
 
-    {% block js %}
-    <script>
-        // Obtener el botón de editar
-        var botonEditar = document.getElementById("editar");
-        var botonEliminar = document.getElementById("eliminar");
-        // Obtener el modal
-        var modal = document.getElementById("modal");
-        var modal_eliminar = document.getElementById("modal_eliminar");
-        // Agregar un evento de escucha al botón de editar
-        botonEditar.addEventListener("click", function () {
-            // Mostrar el modal
-            modal.style.display = "block";
-        });
+{% block js %}
+<script>
+    // Obtener el botón de editar
+    var botonEditar = document.getElementById("editar");
+    var botonEliminar = document.getElementById("eliminar");
+    // Obtener el modal
+    var modal = document.getElementById("modal");
+    var modal_eliminar = document.getElementById("modal_eliminar");
+    // Agregar un evento de escucha al botón de editar
+    botonEditar.addEventListener("click", function () {
+        // Mostrar el modal
+        modal.style.display = "block";
+    });
 
-        botonEliminar.addEventListener("click", function () {
-            // Mostrar el modal
-            cerrarModalM;
-            modal_eliminar.style.display = "block";
-        });
+    botonEliminar.addEventListener("click", function () {
+        // Mostrar el modal
+        cerrarModalM;
+        modal_eliminar.style.display = "block";
+    });
 
-        document.getElementById("miImagen").addEventListener("click", cerrarModal);
-        function cerrarModal() {
-            var modal_e = document.getElementById('modal_eliminar');
-            modal_e.style.display = 'none';
-        }
+    document.getElementById("miImagen").addEventListener("click", cerrarModal);
+    function cerrarModal() {
+        var modal_e = document.getElementById('modal_eliminar');
+        modal_e.style.display = 'none';
+    }
 
-        function cerrarModalM() {
-            var modal_m = document.getElementById('modal');
-            modal_m.style.display = 'none';
-        }
+    function cerrarModalM() {
+        var modal_m = document.getElementById('modal');
+        modal_m.style.display = 'none';
+    }
 
-        
 
-    </script>
-    {% endblock js %}
+
+</script>
+{% endblock js %}

@@ -3,134 +3,236 @@
 
 {% block content %}
 
-    <head>
-        <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
-        <style>
-            .contenido {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 80vh;
-                background-color: white;
-                font-family: 'Magra', sans-serif;
-                margin-top: 15px;
-            }
-            #contenedor-formulario {
-                background-color: #791F00;
-                padding: 25px 0;
-                border-radius: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                max-width: 350px;
-                width: 100%;
-                margin: 0 auto; /* Agregar esta línea */
-                text-align: center; 
-            }
-        
-            #formulario-producto{
-                display: block;
-                margin: 0 auto; 
-                max-width: 280px; /* Agregar esta línea para limitar el ancho del formulario */
-                align-items: center;
-            }
-            
-            .cont{
-                display: inline-flex; /* Modificación */
-                font-size: 16px;
-                justify-content: space-between ;
-                width: 50%;
-                color: rgb(255, 248, 248);
-            }
-            input{
-                display: inline-block; /* Modificación */
-                margin: 0 0 25px !important;
-                width: 50% !important; /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
-                height: 25px !important;
-                color: black !important; /* Establecer el color del texto en blanco */
-                border-radius: 30px !important;
-                text-align: center !important;
-                border: black !important;
-                resize: none; 
-            }
-        
-            #metodo_pago{
-                background-color: rgba(255, 255, 255, 0.3); /* Cambiar opacity por rgba */
-            }
-        
-            #nombre, #precio, #cantidad{
-                background-color: white ;
-            }
-            input::placeholder {
-                color: white; /* Cambiar el color del placeholder */
-                opacity: .5;
-            }
-            textarea::placeholder {
-                color: white; /* Cambiar el color del placeholder */
-                opacity: .5;
-            }
-        
-            input[type=number]::-webkit-inner-spin-button,
-            input[type=number]::-webkit-outer-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
-        
-            button[type="submit"] {
-                padding: 8px 16px;
-                background-color: white;
-                color: black;
-                border: none;
-                cursor: pointer;
-                border-radius: 30px;
-                width: 100px;
-            }
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
+    <style>
+        .contenido {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            background-color: white;
+            font-family: 'Magra', sans-serif;
+            margin-top: 15px;
+        }
 
-            .cancelar,.pagar,.cambiar{
-                display: block;
-                margin: 0 0 20px 10%;
-                width: 80% ; /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
-                height: 30px ;
-                color: black ; /* Establecer el color del texto en blanco */
-                border-radius: 30px ;
-                text-align: center;
-                border: black;
-                resize: none;
-                padding: 2px 0;
-                font-size: 16px;
-            }
-            .pagar{
-                background-color: #E6AF2E;
-                cursor: pointer;
-            }
+        #contenedor-formulario {
+            background-color: #791F00;
+            padding: 25px 0;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 350px;
+            width: 100%;
+            margin: 0 auto;
+            /* Agregar esta línea */
+            text-align: center;
+        }
 
-            .cambiar{
-                background-color: rgb(255, 242, 242);
-            }
+        #formulario-producto {
+            display: block;
+            margin: 0 auto;
+            max-width: 280px;
+            /* Agregar esta línea para limitar el ancho del formulario */
+            align-items: center;
+        }
 
-            .cancelar{
-                background-color: #F54436;
-            }
-        </style>
-    </head>
-    <div class=contenido>
-        <div style="width: 100%; text-align: center;">
-          <div id="contenedor-formulario">
-              <form id="formulario-producto" method="post" action="/ventas/" enctype="multipart/form-data">
+        .cont {
+            display: inline-flex;
+            /* Modificación */
+            font-size: 16px;
+            justify-content: space-between;
+            width: 50%;
+            color: rgb(255, 248, 248);
+        }
+
+        input {
+            display: inline-block;
+            /* Modificación */
+            margin: 0 0 25px !important;
+            width: 50% !important;
+            /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
+            height: 25px !important;
+            color: black !important;
+            /* Establecer el color del texto en blanco */
+            border-radius: 30px !important;
+            text-align: center !important;
+            border: black !important;
+            resize: none;
+        }
+
+        #metodo_pago {
+            background-color: rgba(255, 255, 255, 0.3);
+            /* Cambiar opacity por rgba */
+        }
+
+        #nombre,
+        #precio,
+        #cantidad {
+            background-color: white;
+        }
+
+        input::placeholder {
+            color: white;
+            /* Cambiar el color del placeholder */
+            opacity: .5;
+        }
+
+        textarea::placeholder {
+            color: white;
+            /* Cambiar el color del placeholder */
+            opacity: .5;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        button[type="submit"] {
+            padding: 8px 16px;
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            width: 100px;
+        }
+
+        .cancelar,
+        .pagar,
+        .cambiar {
+            display: block;
+            margin: 0 0 20px 10%;
+            width: 80%;
+            /* Modificar esta línea para que los inputs y textarea ocupen el ancho completo del formulario */
+            height: 30px;
+            color: black;
+            /* Establecer el color del texto en blanco */
+            border-radius: 30px;
+            text-align: center;
+            border: black;
+            resize: none;
+            padding: 2px 0;
+            font-size: 16px;
+        }
+
+        .pagar {
+            background-color: #E6AF2E;
+            cursor: pointer;
+        }
+
+        .cambiar {
+            background-color: rgb(255, 242, 242);
+        }
+
+        .cancelar {
+            background-color: #F54436;
+        }
+    </style>
+</head>
+<div class="contenido">
+    <div style="width: 100%; text-align: center;">
+        <div id="contenedor-formulario">
+            <form id="formulario-producto" method="post" action="/ventas/" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p class="cont">Método de pago</p><input type="text" id="metodo_pago" value="tarjeta" readonly >
-                <p class="cont">Subtotal </p><input type="text"  id="nombre" required><br>
-                <p class="cont">IVA </p><input type="number" id="precio" required><br>
-                <p class="cont">Orden total</p><input type="number" id="cantidad"  required>
-                <div><p class="pagar">Pagar</p></div>
+                <p class="cont">Método de pago</p>
+                <input type="text" id="metodo_pago" value="tarjeta" readonly>
+                <p class="cont">Subtotal </p>
+                <input type="text" id="sub_total" readonly>
+                <p class="cont">IVA </p>
+                <input type="number" id="iva" readonly>
+                <p class="cont">Orden total</p>
+                <input type="number" id="subtotal" readonly>
+                <div>
+                    <p class="pagar">Pagar</p>
+                </div>
                 <p><a href="" class="cambiar">Cambiar forma de pago</a></p>
                 <p><a href="" class="cancelar">Cancelar compra</a></p>
-              </form>
-            </div>
+            </form>
         </div>
-      </div>
-
-
-{% endblock content %}
+    </div>
+</div>
+{% endblock %}
 
 {% block js %}
+<script>
+    $(document).ready(function () {
+        // Obtener el valor del método de pago desde el contexto
+        var metodoPago = "{{ metodo_pago }}";
 
+        // Establecer el valor en el campo de entrada
+        $("#metodo_pago").val(metodoPago);
+    });
+
+    
+    // Obtener el valor del subtotal almacenado en el almacenamiento local
+    const subtotal = parseFloat(localStorage.getItem('subtotal'));
+
+    // Mostrar el valor del subtotal en el campo de input correspondiente
+    const subtotalInput = document.querySelector('#subtotal');
+    subtotalInput.value = subtotal.toFixed(2);
+
+    // Calcular el IVA (16%)
+    const iva = subtotal * 0.16;
+
+    // Calcular el orden total (subtotal + iva)
+    const ordenTotal = subtotal + iva;
+
+    // Mostrar los valores en los campos de input correspondientes y bloquear el campo de orden total
+    const ivaInput = document.querySelector('#iva');
+    const ordenTotalInput = document.querySelector('#orden_total');
+
+    ivaInput.value = iva.toFixed(2);
+    ordenTotalInput.value = ordenTotal.toFixed(2);
+    ordenTotalInput.readOnly = true;
+
+    // Enviar los datos a la base de datos de historial de ventas
+    const formulario = document.querySelector('#formulario-producto');
+    formulario.addEventListener('submit', (event) => {
+        // Evitar que se realice la acción por defecto del formulario
+        event.preventDefault();
+
+        // Obtener los datos del formulario
+        const metodoPago = document.querySelector('#metodo_pago').value;
+        const subtotal = parseFloat(document.querySelector('#subtotal').value);
+        const iva = parseFloat(document.querySelector('#iva').value);
+        const ordenTotal = parseFloat(document.querySelector('#orden_total').value);
+
+        // Realizar la petición HTTP para enviar los datos a la base de datos
+        // Aquí deberías utilizar una biblioteca o framework para hacer la petición AJAX
+        // Por ejemplo, puedes usar fetch() o Axios
+
+        // Ejemplo de uso de fetch():
+        fetch('/guardar_venta/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                metodo_pago: metodoPago,
+                subtotal: subtotal,
+                iva: iva,
+                orden_total: ordenTotal,
+            }),
+        })
+        .then(response => {
+            // Procesar la respuesta de la petición HTTP
+            if (response.ok) {
+                // La venta se guardó exitosamente en la base de datos
+                // Puedes redirigir al usuario a una página de confirmación o mostrar un mensaje de éxito
+                window.location.href = '/venta_exitosa/';
+            } else {
+                // Hubo un error al guardar la venta en la base de datos
+                // Puedes mostrar un mensaje de error al usuario
+            }
+        })
+        .catch(error => {
+            // Manejar el error de la petición HTTP
+            console.error('Error al enviar los datos a la base de datos:', error);
+            // Puedes mostrar un mensaje de error al usuario
+        });
+    });
+</script>
 {% endblock js %}
