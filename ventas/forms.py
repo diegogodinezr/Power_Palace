@@ -2,7 +2,13 @@ from multiprocessing.sharedctypes import Value
 from django import forms
 from .models import *
 
-class productoform(forms.ModelForm):
+class Productoform(forms.ModelForm):
     class Meta:
-        model = producto
+        model = Producto
         fields = '__all__'
+
+class VentaForm(forms.ModelForm):
+    class Meta:
+        model = Venta
+        fields = '__all__'
+        

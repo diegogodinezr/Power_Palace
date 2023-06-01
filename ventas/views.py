@@ -1,16 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
-from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.db.models import Q
 
 #====================LOGIN====================
 def login_ventas(request):
     if request.user.is_authenticated:
-        return redirect('/ventas/interfaz_venta')
+        return redirect('/interfaz_venta')
     else:
         if request.method == 'POST':
             username = request.POST.get('username')
@@ -20,7 +20,7 @@ def login_ventas(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('/ventas/interfaz_venta')
+                return redirect('/interfaz_venta')
             else:
                 messages.info(request, 'Username OR password is incorrect')
 
@@ -38,40 +38,34 @@ def interfaz_venta(request):
 #====================PRODUCTO====================
 def registrar_producto(request):
     if request.method == 'POST':
-        formulario = productoform(request.POST)
+        formulario = Productoform(request.POST)
         if formulario.is_valid():
             formulario.save()
+            return redirect('registrar_producto')
     else:
-        formulario = productoform()
-    consulta = producto.objects.all()
+        formulario = Productoform()
+    consulta = Producto.objects.all()
     context = {
         'view_name': "landing1",
         'formulario': formulario,
         'consulta': consulta,
     }
     return render(request, 'registrar_productos.html', context)
-  
+
 def post_producto(request):
-    if request.method=="POST":
-        form=productoform(request.POST,request.FILES)
+    if request.method == "POST":
+        form = Productoform(request.POST)
         if form.is_valid():
-            producto.objects.create(
-                id_producto = request.POST["id_producto"],
-                nombre = request.POST["nombre"],
-                precio = request.POST["precio"],
-                descripcion = request.POST["descripcion"],
-                cantidad = request.POST["cantidad"],
-                categoria = request.POST["categoria"],
-            )
-            return redirect('/ventas/registrar_producto')
-        else:
-            form = productoform()
-        return render(request,'registrar_productos.html')
+            form.save()
+            return redirect('registrar_producto/')
+    else:
+        form = Productoform()
+    return render(request, 'registrar_productos.html', {'form': form})
     
 def sacar_datos_productor(request, id):
     objeto = producto.objects.get(id=id)
     id=id
-    formulario = productoform(instance=objeto)
+    formulario = Productoform(instance=objeto)
     datos = {'formulario': formulario}
     #falta agregar el updateproductor.html
     html_form = render_to_string('updateproducto.html', datos, request=request)
@@ -79,14 +73,14 @@ def sacar_datos_productor(request, id):
 
 def removerproductor(request):
     idproductor = request.POST["idproducto"]
-    consulta = producto.objects.get(id=idproductor)
+    consulta = Producto.objects.get(id=idproductor)
     consulta.delete()
     return HttpResponse('producto eliminado correctamente')
 
 #====================INVENTARIO====================
 
 def inventario(request):
-    productos = producto.objects.all()
+    productos = Producto.objects.all()
     context={ 
         'view_name': "landing1",
         'productos': productos
@@ -94,12 +88,12 @@ def inventario(request):
     return render (request,'inventario.html',context)
 
 def updateproducto(request,id):
-    resultado=producto.objects.get(id=id)
+    resultado=Producto.objects.get(id=id)
     id=id
-    form=productoform(instance=resultado)
+    form=Productoform(instance=resultado)
     template_to_return = "inventario.html"
     if request.method=="POST":
-        form=productoform(request.POST,request.FILES)
+        form=Productoform(request.POST,request.FILES)
         if form.is_valid():
             resultado.id_producto = request.POST["id_producto"]
             resultado.nombre = request.POST["nombre"]
@@ -108,7 +102,7 @@ def updateproducto(request,id):
             resultado.cantidad = request.POST["cantidad"]
             resultado.categoria = request.POST["categoria"]
             resultado.save()
-            return redirect("/ventas/updateproducto")
+            return redirect("/updateproducto")
 
     context={
         'form':form,
@@ -117,18 +111,44 @@ def updateproducto(request,id):
     }
     return render (request, template_to_return,context)
 
+#Buscador
 def buscar_productos(request):
     query = request.GET.get('q', '')
-    productos = producto.objects.filter(nombre__icontains=query).values('id_producto', 'nombre', 'precio')
-    return JsonResponse({'productos': list(productos)})
+    productos = Producto.objects.filter(Q(nombre__icontains=query) | Q(id_producto=query))
+    response_data = {'productos': []}
+    for producto in productos:
+        response_data['productos'].append({
+            'id': producto.id_producto,
+            'nombre': producto.nombre,
+            'precio': producto.precio,
+        })
+    return JsonResponse(response_data)
 
 #====================VENTAS====================
 def ventas(request):
-    template_to_return='ventas.html'
-    context={ 
+    # Lógica para calcular el subtotal
+    subtotal = 0.0
+
+    # Obtener los productos del carrito utilizando la función obtener_productos_del_carrito
+    carrito = obtener_productos_del_carrito()
+
+    for producto in carrito:
+        subtotal += producto.precio
+
+    
+
+    context = {
         'view_name': "landing1",
+        'subtotal': subtotal,
     }
-    return render (request,template_to_return,context)
+
+    return render(request, 'ventas.html', context)
+
+def obtener_productos_del_carrito():
+    carrito = []  
+
+    return carrito
+
 
 def pago(request):
     template_to_return='pago.html'
@@ -138,11 +158,12 @@ def pago(request):
     return render (request,template_to_return,context)
 
 def metodo_pago(request):
-    template_to_return='metodo_pago.html'
-    context={ 
+    metodo_pago = request.GET.get('metodo_pago')
+    context = {
         'view_name': "landing1",
+        'metodo_pago': metodo_pago,
     }
-    return render (request,template_to_return,context)
+    return render(request, 'metodo_pago.html', context)
 
 #====================HISTORIAL VENTAS====================
 def historial_ventas(request):
