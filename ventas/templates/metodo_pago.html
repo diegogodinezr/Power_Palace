@@ -17,7 +17,7 @@
         }
 
         #contenedor-formulario {
-            background-color: #791F00;
+            background-color: #A3320B;
             padding: 25px 0;
             border-radius: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -65,19 +65,13 @@
             /* Cambiar opacity por rgba */
         }
 
-        #nombre,
-        #precio,
-        #cantidad {
+        #subtotal,
+        #iva,
+        #Total {
             background-color: white;
         }
 
         input::placeholder {
-            color: white;
-            /* Cambiar el color del placeholder */
-            opacity: .5;
-        }
-
-        textarea::placeholder {
             color: white;
             /* Cambiar el color del placeholder */
             opacity: .5;
@@ -89,18 +83,7 @@
             margin: 0;
         }
 
-        button[type="submit"] {
-            padding: 8px 16px;
-            background-color: white;
-            color: black;
-            border: none;
-            cursor: pointer;
-            border-radius: 30px;
-            width: 100px;
-        }
-
         .cancelar,
-        .pagar,
         .cambiar {
             display: block;
             margin: 0 0 20px 10%;
@@ -117,9 +100,18 @@
             font-size: 16px;
         }
 
-        .pagar {
-            background-color: #E6AF2E;
+        button[type="submit"] {
+            padding: 8px 16px;
+            background-color: white;
+            color: black;
+            border: none;
             cursor: pointer;
+            border-radius: 30px;
+            width: 220px;
+            background-color: #E6AF2E;
+            font-family: 'Magra', sans-serif;
+            font-size: 16px;
+
         }
 
         .cambiar {
@@ -131,24 +123,18 @@
         }
     </style>
 </head>
-<div class="contenido">
+<div class=contenido>
     <div style="width: 100%; text-align: center;">
         <div id="contenedor-formulario">
-            <form id="formulario-producto" method="post" action="/ventas/" enctype="multipart/form-data">
+            <form id="formulario-producto" method="post" action="/post_pago/" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p class="cont">Método de pago</p>
-                <input type="text" id="metodo_pago" value="tarjeta" readonly>
-                <p class="cont">Subtotal </p>
-                <input type="text" id="sub_total" readonly>
-                <p class="cont">IVA </p>
-                <input type="number" id="iva" readonly>
-                <p class="cont">Orden total</p>
-                <input type="number" id="subtotal" readonly>
-                <div>
-                    <p class="pagar">Pagar</p>
-                </div>
-                <p><a href="" class="cambiar">Cambiar forma de pago</a></p>
-                <p><a href="" class="cancelar">Cancelar compra</a></p>
+                <p class="cont">Método de pago</p><input type="text" name="metodo" id="metodo_pago" value="" readonly>
+                <p class="cont">Subtotal $</p><input type="text" name="subtotal" id="subtotal" value="$" readonly><br>
+                <p class="cont">IVA (16%) $</p><input type="text" name="iva" id="iva" value="$" readonly><br>
+                <p class="cont">Total $</p><input type="text" name="total" id="Total" onchange="calcularSubtotal()" value="$" readonly>
+                <div><button type="submit">Pagar</button></div>
+                <p><a href="/pagar" class="cambiar">Cambiar forma de pago</a></p>
+                <p><a href="/regresar" class="cancelar">Cancelar compra</a></p>
             </form>
         </div>
     </div>
@@ -157,82 +143,34 @@
 
 {% block js %}
 <script>
-    $(document).ready(function () {
+    function calcularSubtotal() {
+        var total = parseFloat(document.getElementById("Total").value.slice(1));
+        var iva = (total / 1.16) * 0.16;
+        document.getElementById("iva").value = "$" + iva.toFixed(2);
+        var subtotal = total - iva;
+        document.getElementById("subtotal").value = "$" + subtotal.toFixed(2);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
         // Obtener el valor del método de pago desde el contexto
         var metodoPago = "{{ metodo_pago }}";
+        var tota = parseFloat(document.getElementById("Total").value.slice(1));
 
         // Establecer el valor en el campo de entrada
         $("#metodo_pago").val(metodoPago);
+        $("#Total").val("$" + tota.toFixed(2));
+
+        // Obtener el valor del total desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const totalFromURL = urlParams.get('total');
+
+        // Establecer el valor en el campo de entrada
+        const totalInput = document.getElementById('Total');
+        totalInput.value = "$" + totalFromURL;
+
+        // Calcular subtotal y iva al modificar el valor del campo
+        calcularSubtotal();
     });
 
-    
-    // Obtener el valor del subtotal almacenado en el almacenamiento local
-    const subtotal = parseFloat(localStorage.getItem('subtotal'));
-
-    // Mostrar el valor del subtotal en el campo de input correspondiente
-    const subtotalInput = document.querySelector('#subtotal');
-    subtotalInput.value = subtotal.toFixed(2);
-
-    // Calcular el IVA (16%)
-    const iva = subtotal * 0.16;
-
-    // Calcular el orden total (subtotal + iva)
-    const ordenTotal = subtotal + iva;
-
-    // Mostrar los valores en los campos de input correspondientes y bloquear el campo de orden total
-    const ivaInput = document.querySelector('#iva');
-    const ordenTotalInput = document.querySelector('#orden_total');
-
-    ivaInput.value = iva.toFixed(2);
-    ordenTotalInput.value = ordenTotal.toFixed(2);
-    ordenTotalInput.readOnly = true;
-
-    // Enviar los datos a la base de datos de historial de ventas
-    const formulario = document.querySelector('#formulario-producto');
-    formulario.addEventListener('submit', (event) => {
-        // Evitar que se realice la acción por defecto del formulario
-        event.preventDefault();
-
-        // Obtener los datos del formulario
-        const metodoPago = document.querySelector('#metodo_pago').value;
-        const subtotal = parseFloat(document.querySelector('#subtotal').value);
-        const iva = parseFloat(document.querySelector('#iva').value);
-        const ordenTotal = parseFloat(document.querySelector('#orden_total').value);
-
-        // Realizar la petición HTTP para enviar los datos a la base de datos
-        // Aquí deberías utilizar una biblioteca o framework para hacer la petición AJAX
-        // Por ejemplo, puedes usar fetch() o Axios
-
-        // Ejemplo de uso de fetch():
-        fetch('/guardar_venta/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: JSON.stringify({
-                metodo_pago: metodoPago,
-                subtotal: subtotal,
-                iva: iva,
-                orden_total: ordenTotal,
-            }),
-        })
-        .then(response => {
-            // Procesar la respuesta de la petición HTTP
-            if (response.ok) {
-                // La venta se guardó exitosamente en la base de datos
-                // Puedes redirigir al usuario a una página de confirmación o mostrar un mensaje de éxito
-                window.location.href = '/venta_exitosa/';
-            } else {
-                // Hubo un error al guardar la venta en la base de datos
-                // Puedes mostrar un mensaje de error al usuario
-            }
-        })
-        .catch(error => {
-            // Manejar el error de la petición HTTP
-            console.error('Error al enviar los datos a la base de datos:', error);
-            // Puedes mostrar un mensaje de error al usuario
-        });
-    });
 </script>
 {% endblock js %}

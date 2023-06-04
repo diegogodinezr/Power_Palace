@@ -156,6 +156,7 @@ def pago(request):
         'view_name': "landing1",
     }
     return render (request,template_to_return,context)
+    
 
 def metodo_pago(request):
     metodo_pago = request.GET.get('metodo_pago')

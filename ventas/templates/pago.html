@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
     <style>
@@ -25,7 +26,7 @@
         }
 
         #contenedor-formulario {
-            background-color:#A3320B;
+            background-color: #A3320B;
             padding: 25px 0;
             border-radius: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -94,19 +95,20 @@
             color: white;
         }
 
-        .compra{
-                background-color: #E6AF2E;
-            }
+        .compra {
+            background-color: #E6AF2E;
+        }
     </style>
-    
+
 </head>
+
 <body>
     <main>
         <div class="contenido">
             <div class="imagen">
                 <img style="width: 380px; height: 380px;" src="/media/pago.png" alt="pago">
             </div>
-            <div class=formulario>
+            <div class="formulario">
                 <div style="width: 100%; text-align: center;">
                     <div id="contenedor-formulario">
                         <form id="formulario-producto">
@@ -119,7 +121,7 @@
                                 <img class="img_opciones" src="/media/efectivo.png" alt="">
                                 <span class="opcion">Efectivo</span>
                             </p>
-
+                            <input type="hidden" id="Total">
                             <p class="cont"><a href="#" class="compra">Pagar</a></p>
                             <p class="cont"><a href="#" class="carrito regresar">Regresar</a></p>
                         </form>
@@ -129,16 +131,17 @@
         </div>
     </main>
 </body>
+
 {% endblock content %}
 
 {% block js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const opciones = document.querySelectorAll('.opcion');
 
-        opciones.forEach(function(opcion) {
-            opcion.addEventListener('click', function() {
-                opciones.forEach(function(op) {
+        opciones.forEach(function (opcion) {
+            opcion.addEventListener('click', function () {
+                opciones.forEach(function (op) {
                     op.classList.remove('clicked');
                 });
                 this.classList.add('clicked');
@@ -148,27 +151,43 @@
         const compraBtn = document.querySelector('.compra');
         const regresarBtn = document.querySelector('.regresar');
 
-        compraBtn.addEventListener('click', function(e) {
+        compraBtn.addEventListener('click', function (e) {
             e.preventDefault();
 
             const metodoPago = document.querySelector('.opcion.clicked').textContent;
-            // Aquí puedes hacer algo con el método de pago seleccionado, como enviarlo como parámetro a través de una petición AJAX o redirigir a otra página con el método de pago seleccionado en la URL.
+            const total = document.getElementById('Total').value;
 
-            // Ejemplo de redirección con método de pago seleccionado en la URL
-            var direccion = '/metodo_pago?metodo_pago=' + encodeURIComponent(metodoPago);
+            var direccion = '/metodo_pago?metodo_pago=' + encodeURIComponent(metodoPago) + '&total=' + encodeURIComponent(total);
             $.ajax({
                 url: direccion,
-                data: { 'metodo_pago': metodoPago },
-                success: function(response) {
+                data: { 'metodo_pago': metodoPago, 'total': total },
+                success: function (response) {
                     // Realizar acciones después de recibir una respuesta exitosa
                     window.location.href = direccion;
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus, errorThrown) {
                     // Manejar el error de la petición AJAX
                 }
             });
-            
         });
+
+        regresarBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.history.back(); // Regresar a la página anterior en el historial
+        });
+
+
+        // Obtener el valor del total desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const totalFromURL = urlParams.get('total');
+
+        // Establecer el valor en el campo de entrada
+        const totalInput = document.getElementById('Total');
+        totalInput.value = totalFromURL;
+
+
     });
+
+
 </script>
 {% endblock js %}

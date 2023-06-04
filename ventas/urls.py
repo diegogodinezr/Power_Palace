@@ -14,6 +14,7 @@ urlpatterns = [
     path('logout/',LogoutView.as_view(next_page='/'), name='logout'),
     path('registrar_producto/',registrar_producto, name="registrar_producto"),
     path('registrar_producto/post_producto/',post_producto, name="post_producto"),
+    path('registrar_producto/post_producto/registrar_producto/',post_producto, name="post_producto"),
     path('inventario/',inventario, name="inventario"),
     path('updateproducto/',updateproducto, name="updateproducto"),
     path('ventas/',ventas, name="ventas"),

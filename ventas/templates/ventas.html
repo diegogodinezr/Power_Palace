@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+
 <head>
     <link rel="stylesheet" href="reset.css">
     <link href="https://fonts.googleapis.com/css2?family=Magra&display=swap" rel="stylesheet">
@@ -34,7 +35,7 @@
             width: 20%;
             height: 40px;
             background-color: #E6AF2E;
-            padding: 0 14px;
+            /* padding: 0 14px; */
             border-radius: 20px;
             margin-right: 10px;
             margin-bottom: 20px;
@@ -51,7 +52,7 @@
             margin-top: 10px;
         }
 
-        #subtotal {
+        #Total {
             border: 1px solid;
             text-align: center;
             font-size: 30px;
@@ -129,6 +130,17 @@
             cursor: pointer;
             color: black;
         }
+        .opcion-busqueda {
+            cursor: pointer;
+            padding: 5px;
+            background-color: #E6AF2E;
+            border-bottom: 1px solid #ddd;
+            border-radius: 25px;
+        }
+
+        .opcion-busqueda:hover {
+            background-color: #e9e9e9;
+        }
     </style>
 </head>
 
@@ -139,10 +151,11 @@
                 <img src="/media/buscar.png" alt="">
                 <div class="buscar">
                     <input id="buscador" type="text" placeholder="Buscar">
+                    <div id="opciones-busqueda"></div>
                 </div>
                 <div id="subtotal-container">
                     <p class="cont">Total</p>
-                    <input type="text" id="subtotal" value="{{ subtotal }}" readonly>
+                    <input type="text" id="Total" value="$0.00" readonly>
                 </div>
             </div>
             <div id="tabla-container">
@@ -161,7 +174,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="btnpago"><a href="/pago/?subtotal={{ subtotal }}" class="pago">Elegir forma de pago</a></p>
+            <p class="btnpago"><a href="/pago" class="pago">Elegir forma de pago</a></p>
         </div>
     </main>
 </body>
@@ -169,24 +182,34 @@
 
 {% block js %}
 <script>
-    // Resto del código JavaScript
-
     const buscador = document.querySelector('#buscador');
+    const opcionesBusqueda = document.querySelector('#opciones-busqueda');
     const tablaProductos = document.querySelector('#tabla-productos tbody');
-    const subtotalInput = document.querySelector('#subtotal');
+    const TotalInput = document.querySelector('#Total');
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const buscadorInput = document.getElementById("buscador");
+
+        buscadorInput.addEventListener('focus', function () {
+            this.removeAttribute('placeholder');
+        });
+
+        buscadorInput.addEventListener('blur', function () {
+            if (!this.value) {
+                this.setAttribute('placeholder', 'Buscar');
+            }
+        });
+    });
 
     buscador.addEventListener('input', () => {
         const query = buscador.value.trim();
         if (query.length >= 3) {
-            fetch(`/buscar_productos/?q=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    const nuevosProductos = data.productos.filter(producto => !productoEnTabla(producto.id));
-                    nuevosProductos.forEach(producto => {
-                        agregarProductoTabla(producto);
-                    });
-                    calcularTotal();
+            obtenerOpcionesBusqueda(query)
+                .then(opciones => {
+                    mostrarOpcionesBusqueda(opciones);
                 });
+        } else {
+            opcionesBusqueda.innerHTML = '';
         }
     });
 
@@ -195,61 +218,121 @@
             event.preventDefault();
             const query = buscador.value.trim();
             if (query.length >= 3) {
-                fetch(`/buscar_productos/?q=${query}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const nuevosProductos = data.productos.filter(producto => !productoEnTabla(producto.id));
-                        nuevosProductos.forEach(producto => {
-                            agregarProductoTabla(producto);
-                        });
-                        calcularTotal();
-                    });
+                agregarProductoDefault(query);
                 buscador.value = '';
+                buscador.focus();
             }
         }
     });
 
-    // Obtener los productos del carrito desde el servidor
-    function obtener_productos_del_carrito() {
-        return fetch('/obtener_productos_del_carrito/')
+    const pagobtn = document.querySelector('.pago');
+    const cancelarbtn = document.querySelector('.cancelarbtn');
+
+    pagobtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const total = parseFloat(TotalInput.value.replace('$', ''));
+
+        // Ejemplo de redirección a la página de pago con el total como parámetro en la URL
+        // Antes de redirigir a pago.html
+        var direccion = '/pago/?total=' + encodeURIComponent(total.toFixed(2));
+        window.location.href = direccion;
+    });
+
+
+    cancelarbtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // Limpiar el almacenamiento local
+        localStorage.removeItem('productosCarrito');
+
+        // Redireccionar a la página de inicio u otra página
+        window.location.href = '/';
+    });
+
+    // Obtener las opciones de búsqueda desde el servidor
+    function obtenerOpcionesBusqueda(query) {
+        return fetch(`/buscar_productos/?q=${query}`)
             .then(response => response.json())
             .then(data => data.productos);
     }
 
-    tablaProductos.addEventListener('click', (event) => {
-        if (event.target.classList.contains('btn-eliminar')) {
-            const fila = event.target.closest('tr');
-            const idProducto = fila.querySelector('.id-producto').value;
-            fila.remove();
-            calcularTotal();
-        }
-    });
-
-    tablaProductos.addEventListener('input', (event) => {
-        if (event.target.classList.contains('cantidad')) {
-            const cantidadInput = event.target;
-            const fila = cantidadInput.closest('tr');
-            const precio = parseFloat(fila.querySelector('td:nth-child(2)').textContent.slice(1));
-            const cantidad = parseInt(cantidadInput.value);
-            const subtotal = fila.querySelector('td:nth-child(4)');
-            subtotal.textContent = `$${(precio * cantidad).toFixed(2)}`;
-            calcularTotal();
-        }
-    });
-
-    function agregarProductoTabla(producto) {
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-            <td>${producto.nombre}</td>
-            <td>$${producto.precio.toFixed(2)}</td>
-            <td><input type="number" class="cantidad" value="1" min="1"></td>
-            <td>$${producto.precio.toFixed(2)}</td>
-            <td><button class="btn-eliminar">Eliminar</button></td>
-            <input type="hidden" class="id-producto" value="${producto.id}">
-        `;
-        tablaProductos.appendChild(fila);
+    // Mostrar las opciones de búsqueda en el desplegable
+    function mostrarOpcionesBusqueda(opciones) {
+        opcionesBusqueda.innerHTML = '';
+        opciones.forEach(opcion => {
+            const item = document.createElement('div');
+            item.classList.add('opcion-busqueda');
+            item.textContent = opcion.nombre;
+            item.addEventListener('click', () => {
+                agregarProductoTabla(opcion);
+                TotalInput.value = '$0.00'; // Establecer el total en $0.00
+                calcularTotal();
+                opcionesBusqueda.innerHTML = '';
+                buscador.value = '';
+                buscador.focus();
+            });
+            opcionesBusqueda.appendChild(item);
+        });
     }
 
+    // Agregar un producto al carrito por defecto (cuando se presiona Enter en el buscador)
+    function agregarProductoDefault(query) {
+        obtenerOpcionesBusqueda(query)
+            .then(opciones => {
+                if (opciones.length > 0) {
+                    const producto = opciones[0];
+                    agregarProductoTabla(producto);
+                    TotalInput.value = '$0.00'; // Establecer el total en $0.00
+                    calcularTotal();
+                }
+            });
+    }
+
+    // Agregar un producto a la tabla
+    function agregarProductoTabla(producto) {
+        if (productoEnTabla(producto.id)) {
+            incrementarCantidadProducto(producto.id);
+            return;
+        }
+
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+                        <td>${producto.nombre}</td>
+                        <td>$${producto.precio.toFixed(2)}</td>
+                        <td><input type="number" class="cantidad" value="1" min="1" max="${producto.existencia}"></td>
+                        <td>$${producto.precio.toFixed(2)}</td>
+                        <td><button class="btn-eliminar">Eliminar</button></td>
+                        <input type="hidden" class="id-producto" value="${producto.id}">
+                        `;
+        tablaProductos.appendChild(fila);
+
+        const cantidadInput = fila.querySelector('.cantidad');
+        cantidadInput.addEventListener('input', actualizarSubtotal);
+
+        // Evento para eliminar un producto de la tabla
+        tablaProductos.addEventListener('click', (event) => {
+            if (event.target.classList.contains('btn-eliminar')) {
+                const fila = event.target.closest('tr');
+                const idProducto = fila.querySelector('.id-producto').value;
+                fila.remove();
+                calcularTotal();
+                actualizarProductosCarrito(idProducto, 0); // Eliminar el producto del carrito
+            }
+        });
+    }
+
+    // Actualizar el subtotal de la fila
+    function actualizarSubtotal(event) {
+        const cantidadInput = event.target;
+        const fila = cantidadInput.closest('tr');
+        const precio = parseFloat(fila.querySelector('td:nth-child(2)').textContent.slice(1));
+        const cantidad = parseInt(cantidadInput.value);
+        const subtotal = fila.querySelector('td:nth-child(4)');
+        subtotal.textContent = `$${(precio * cantidad).toFixed(2)}`;
+        calcularTotal();
+    }
+
+    // Verificar si un producto ya está en la tabla
     function productoEnTabla(idProducto) {
         const filas = tablaProductos.querySelectorAll('tr');
         for (let i = 0; i < filas.length; i++) {
@@ -261,18 +344,34 @@
         return false;
     }
 
+    // Incrementar la cantidad de un producto en la tabla
+    function incrementarCantidadProducto(idProducto) {
+        const filas = tablaProductos.querySelectorAll('tr');
+        for (let i = 0; i < filas.length; i++) {
+            const id = filas[i].querySelector('.id-producto').value;
+            if (id === idProducto) {
+                const cantidadInput = filas[i].querySelector('.cantidad');
+                const cantidad = parseInt(cantidadInput.value);
+                cantidadInput.value = cantidad + 1;
+                actualizarSubtotal({ target: cantidadInput });
+                return;
+            }
+        }
+    }
+
+    // Calcular el total de la compra
     function calcularTotal() {
         const filas = tablaProductos.querySelectorAll('tr');
         let total = 0;
         filas.forEach(fila => {
             const precio = parseFloat(fila.querySelector('td:nth-child(2)').textContent.slice(1));
             const cantidad = parseInt(fila.querySelector('.cantidad').value);
-            total += precio * cantidad;
+            const subtotal = precio * cantidad;
+            fila.querySelector('td:nth-child(4)').textContent = `$${subtotal.toFixed(2)}`;
+            total += subtotal;
         });
-        subtotalInput.value = total.toFixed(2);
+        TotalInput.value = total === 0 ? "$0.00" : `$${total.toFixed(2)}`;
     }
 
 </script>
-{% endblock js %}
-
-
+{% endblock %}
