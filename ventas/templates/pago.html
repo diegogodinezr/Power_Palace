@@ -173,7 +173,7 @@
 
         regresarBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            window.history.back(); // Regresar a la página anterior en el historial
+            window.location.href = '/ventas';
         });
 
 
@@ -187,6 +187,12 @@
 
 
     });
+
+    function obtenerCarritoDesdeLocalStorage() {
+        const carrito = JSON.parse(localStorage.getItem('carrito'));
+        return carrito ? carrito : [];
+    }
+
 
 
 </script>

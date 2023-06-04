@@ -168,8 +168,35 @@ def metodo_pago(request):
 
 #====================HISTORIAL VENTAS====================
 def historial_ventas(request):
-    template_to_return='historial_ventas.html'
-    context={ 
-        'view_name': "landing1",
-    }
-    return render (request,template_to_return,context)
+    if request.method == 'POST':
+        form = HistorialVentaForm(request.POST)
+        print(form.errors)
+        print(form.cleaned_data)
+
+        if form.is_valid():
+            fecha = form.cleaned_data['fecha']
+            id_producto = form.cleaned_data['id_producto']
+            nombre = form.cleaned_data['nombre']
+            cantidad = form.cleaned_data['cantidad']
+            precio = form.cleaned_data['precio']
+            subtotal = form.cleaned_data['subtotal']
+            metodo_pago = form.cleaned_data['metodo_pago']
+            total = form.cleaned_data['total']  # Corrección: utiliza "total" en lugar de "Total"
+            
+            venta = HistorialVenta(
+                fecha=fecha,
+                id_producto=id_producto,
+                nombre=nombre,
+                cantidad=cantidad,
+                precio=precio,
+                subtotal=subtotal,
+                metodo_pago=metodo_pago,
+                total=total
+            )
+            venta.save()
+            return redirect('historial_ventas')  # Redirecciona a la página de historial de ventas
+    else:
+        form = HistorialVentaForm()
+    
+    return render(request, 'historial_ventas.html', {'form': form})
+

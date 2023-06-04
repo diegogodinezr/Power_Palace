@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Producto(models.Model):
@@ -20,3 +21,14 @@ class Venta(models.Model):
 
     def __str__(self):
         return f"Venta {self.id}"
+
+
+class HistorialVenta(models.Model):
+    fecha = models.DateField(default=timezone.now)  # Guarda la fecha actual al crear el registro
+    id_producto = models.IntegerField()
+    nombre = models.CharField(max_length=100)
+    cantidad = models.IntegerField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    metodo_pago = models.CharField(max_length=100)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
