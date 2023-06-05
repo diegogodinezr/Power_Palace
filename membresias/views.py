@@ -230,7 +230,7 @@ def modificar_pago(request):
     if request.method == "POST":
         fpago = datetime.now()
         fecha_siguiente = fpago + timedelta(days=30)
-        pago_existente = get_object_or_404(pago, id_cliente=cliente)
+        pago_existente = get_object_or_404(pago, id_cliente=clienteid)
         formato_fecha = fpago.strftime("%d/%m/%Y")
         # Actualizar los campos del pago existente
         pago_existente.fecha_pago = fpago
