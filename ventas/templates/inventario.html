@@ -298,12 +298,15 @@
                             <td>{{ producto.cantidad }}</td>
                             <td>{{ producto.precio }}</td>
                             <td>
-                                <div id="editar" class="acciones"><img class="imagenes" src="/media/modificar_tabla.svg"
-                                        alt=""> Editar</div>
+                                <button class="editar" data-id="{{ producto.id }}">
+                                    <img class="imagenes" src="/media/modificar_tabla.svg" alt=""> Editar
+                                </button>
                             </td>
                             <td>
-                                <div id="eliminar" class="acciones"><img class="imagenes"
-                                        src="/media/eliminar_tablas.png" alt=""> Eliminar</div>
+                                <div class="acciones">
+                                    <a class="eliminar" data-id="{{ producto.id }}"><img class="imagenes"
+                                            src="/media/eliminar_tablas.png" alt=""> Eliminar</a>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -317,65 +320,204 @@
             <div class="modal-cerrar">
                 <img src="/media/cerrar.png" id="miImagen" alt="cerrar">
             </div>
-            <p>El producto fue eliminado de manera lógica</p>
-            <button class="botones-modal" onclick="cerrarModal()">Finalizar</button>
-            <!-- Agregar un botón para cerrar el modal -->
+            <form id="formulario-eliminar" method="post" action="/eliminar_producto/">
+                {% csrf_token %}
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <input type="hidden" name="id_producto" id="producto_id_eliminar" value="">
+                <button type="submit" id="finalizar_btn">Eliminar</button>
+            </form>
         </div>
+
     </div>
-</body>
-<div id="modal" class="modal">
-    <div class=form_contenido>
-        <div style="width: 100%; text-align: center;">
-            <h1 style="font-size: 35px; padding-bottom: 5px;">Modificar producto</h1>
-            <div id="contenedor-formulario">
-                <form id="formulario-producto" method="post" action="updateproducto/" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input class="ingresar" type="text" id="id_producto" required required placeholder="ID producto">
-                    <input class="ingresar" type="text" id="nombre" required placeholder="Nombre">
-                    <input class="ingresar" type="number" id="precio" required placeholder="Precio">
-                    <input class="ingresar" type="number" id="cantidad" required placeholder="Cantidad">
-                    <textarea id="descripcion" required placeholder="Descripción"></textarea>
-                    <input class="ingresar" type="text" id="categoria" required placeholder="categoría">
-                    <button type="submit">Guardar</button>
-                </form>
+    <div id="modal" class="modal">
+        <div class=form_contenido>
+            <div style="width: 100%; text-align: center;">
+                <h1 style="font-size: 35px; padding-bottom: 5px;">Modificar producto</h1>
+                <div id="contenedor-formulario">
+                    <form id="formulario-producto" method="post" action="/updateproducto/" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input class="ingresar" type="text" id="id_producto" name="id_producto" required
+                            placeholder="ID producto">
+                        <input class="ingresar" type="text" id="nombre" name="nombre" required placeholder="Nombre">
+                        <input class="ingresar" type="number" id="precio" name="precio" required placeholder="Precio">
+                        <input class="ingresar" type="number" id="cantidad" name="cantidad" required
+                            placeholder="Cantidad">
+                        <textarea id="descripcion" name="descripcion" required placeholder="Descripción"></textarea>
+                        <input class="ingresar" type="text" id="categoria" name="categoria" required
+                            placeholder="Categoría">
+                        <input type="hidden" id="producto_id" name="producto_id" value="">
+                        <button type="submit" id="cerrarModalBtn">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock content%}
+</body>
 
-{% block js %}
 <script>
-    // Obtener el botón de editar
-    var botonEditar = document.getElementById("editar");
-    var botonEliminar = document.getElementById("eliminar");
-    // Obtener el modal
-    var modal = document.getElementById("modal");
-    var modal_eliminar = document.getElementById("modal_eliminar");
-    // Agregar un evento de escucha al botón de editar
-    botonEditar.addEventListener("click", function () {
-        // Mostrar el modal
-        modal.style.display = "block";
-    });
+    //AREA DE MODIFICAR PRODUCTO
+    // Función para abrir el modal de edición
+    function abrirModalEditar(event) {
+        event.preventDefault();
+        const productoId = event.target.dataset.id;
+        console.log('Producto ID:', productoId);
 
-    botonEliminar.addEventListener("click", function () {
-        // Mostrar el modal
-        cerrarModalM;
-        modal_eliminar.style.display = "block";
-    });
+        // Realizar una solicitud AJAX para obtener el producto por su ID
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", `/obtener_producto/${productoId}/`, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    const producto = JSON.parse(xhr.responseText);
+                    console.log('Producto:', producto);
+                    if (producto && producto.producto) {
+                        const formularioProducto = document.getElementById("formulario-producto");
+                        formularioProducto.id_producto.value = producto.producto.id;
+                        formularioProducto.nombre.value = producto.producto.nombre;
+                        formularioProducto.precio.value = producto.producto.precio;
+                        formularioProducto.cantidad.value = producto.producto.cantidad;
+                        formularioProducto.descripcion.value = producto.producto.descripcion;
+                        formularioProducto.categoria.value = producto.producto.categoria;
 
-    document.getElementById("miImagen").addEventListener("click", cerrarModal);
-    function cerrarModal() {
-        var modal_e = document.getElementById('modal_eliminar');
-        modal_e.style.display = 'none';
+                        const modal = document.getElementById("modal");
+                        modal.style.display = "block";
+                    } else {
+                        console.error('No se encontró el producto');
+                    }
+                } else {
+                    console.error('Error al obtener el producto');
+                }
+            }
+        };
+        xhr.send();
     }
 
-    function cerrarModalM() {
-        var modal_m = document.getElementById('modal');
-        modal_m.style.display = 'none';
+
+
+
+
+    // Función para cerrar el modal de edición
+    function cerrarModalEditar() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "none";
+    }
+
+    // Función para actualizar el producto
+    function actualizarProducto() {
+        const formularioProducto = document.getElementById("formulario-producto");
+        const formData = new FormData(formularioProducto);
+        const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+        const productoId = formularioProducto.id_producto.value; // Obtener el id del producto del campo "id_producto"
+
+        // Realizar una petición AJAX para actualizar el producto
+        const xhr = new XMLHttpRequest();
+        
+        xhr.open("POST", `/updateproducto/`, true);
+        // Pasar el id en la URL
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Producto actualizado con éxito
+                    cerrarModalEditar();
+                    // Puedes realizar cualquier otra acción necesaria después de actualizar el producto
+                } else {
+                    // Error al actualizar el producto
+                    console.error("Error al actualizar el producto");
+                }
+            }
+        };
+
+        xhr.send(formData);
     }
 
 
+    // Agregar eventos a los botones relevantes
+    document.addEventListener("DOMContentLoaded", function () {
+        const editarButtons = document.querySelectorAll(".editar");
+        const guardarBtn = document.querySelector("#formulario-producto button[type='submit']");
+        const cerrarModalBtn = document.querySelector("#cerrarModalBtn");
 
+        editarButtons.forEach(function (button) {
+            button.addEventListener("click", abrirModalEditar);
+        });
+
+        guardarBtn.addEventListener("click", actualizarProducto);
+        cerrarModalBtn.addEventListener("click", cerrarModalEditar);
+    });
+
+
+
+
+
+
+
+    //AREA DE ELIMINAR PRODUCTO
+    // Función para abrir el modal de eliminación
+    function abrirModalEliminar(event) {
+        event.preventDefault();
+        const productoId = event.target.dataset.id;
+        console.log(productoId); // Agregado para verificar el valor del ID del producto
+        const modalEliminar = document.getElementById("modal_eliminar");
+        modalEliminar.style.display = "block";
+        // Guardar el id del producto en un campo oculto dentro del modal
+        const productoIdInput = modalEliminar.querySelector("#producto_id_eliminar");
+        productoIdInput.value = productoId;
+    }
+
+    // Función para cerrar el modal de eliminación
+    function cerrarModalEliminar() {
+        const modalEliminar = document.getElementById("modal_eliminar");
+        modalEliminar.style.display = "none";
+    }
+
+    // Función para eliminar el producto
+    // Función para eliminar el producto
+    function eliminarProducto() {
+        const productoId = obtenerIdDelProducto(); // Obtener el ID del producto de alguna manera
+        const productoIdInput = document.querySelector("#producto_id_eliminar");
+        const modalEliminar = document.getElementById("modal_eliminar");
+
+        productoIdInput.value = productoId;
+        // Crear un objeto FormData para enviar los datos del formulario
+        const formData = new FormData();
+        formData.append("id_producto", productoId);
+
+        // Realizar una petición AJAX para eliminar el producto
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/eliminar_producto/", true);
+        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");  // Agrega esta línea para incluir el token CSRF
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Producto eliminado con éxito
+                    cerrarModalEliminar();
+                    // Puedes realizar cualquier otra acción necesaria después de eliminar el producto
+                } else {
+                    // Error al eliminar el producto
+                    console.error("Error al eliminar el producto");
+                }
+            }
+        };
+
+        xhr.send(formData);
+    }
+
+    // Agregar eventos a los botones y enlaces relevantes
+    document.addEventListener("DOMContentLoaded", function () {
+        const eliminarLinks = document.querySelectorAll(".eliminar");
+        const finalizarBtn = document.querySelector("#finalizar_btn");
+        const cerrarModalBtn = document.querySelector("#miImagen");
+
+        eliminarLinks.forEach(function (link) {
+            link.addEventListener("click", abrirModalEliminar);
+        });
+
+        finalizarBtn.addEventListener("click", eliminarProducto);
+        cerrarModalBtn.addEventListener("click", cerrarModalEliminar);
+    });
 </script>
-{% endblock js %}
+
+{% endblock %}

@@ -168,7 +168,7 @@
   <div style="width: 100%; text-align: center;">
     <h1 style="font-size: 35px; padding-bottom: 5px;">Registrar producto</h1>
     <div id="contenedor-formulario">
-      <form id="formulario-producto" method="post" action="post_producto/" enctype="multipart/form-data">
+      <form id="formulario-producto" method="post" action="/post_producto/" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" id="id_producto" name="id_producto" required required placeholder="ID producto">
         <input type="text" id="nombre" name="nombre" required placeholder="Nombre">

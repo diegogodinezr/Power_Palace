@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 from .models import *
 from django.http import HttpResponse, JsonResponse
@@ -44,38 +44,23 @@ def registrar_producto(request):
             return redirect('registrar_producto')
     else:
         formulario = Productoform()
-    consulta = Producto.objects.all()
+    
     context = {
         'view_name': "landing1",
         'formulario': formulario,
-        'consulta': consulta,
     }
     return render(request, 'registrar_productos.html', context)
+
 
 def post_producto(request):
     if request.method == "POST":
         form = Productoform(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('registrar_producto/')
+            return redirect('/registrar_producto/')  # Redirigir a la misma URL para mostrar el formulario vacío
     else:
         form = Productoform()
     return render(request, 'registrar_productos.html', {'form': form})
-    
-def sacar_datos_productor(request, id):
-    objeto = producto.objects.get(id=id)
-    id=id
-    formulario = Productoform(instance=objeto)
-    datos = {'formulario': formulario}
-    #falta agregar el updateproductor.html
-    html_form = render_to_string('updateproducto.html', datos, request=request)
-    return HttpResponse(html_form,id)
-
-def removerproductor(request):
-    idproductor = request.POST["idproducto"]
-    consulta = Producto.objects.get(id=idproductor)
-    consulta.delete()
-    return HttpResponse('producto eliminado correctamente')
 
 #====================INVENTARIO====================
 
@@ -85,31 +70,63 @@ def inventario(request):
         'view_name': "landing1",
         'productos': productos
     }
-    return render (request,'inventario.html',context)
+    return render(request, 'inventario.html', context)
 
-def updateproducto(request,id):
-    resultado=Producto.objects.get(id=id)
-    id=id
-    form=Productoform(instance=resultado)
-    template_to_return = "inventario.html"
-    if request.method=="POST":
-        form=Productoform(request.POST,request.FILES)
+def updateproducto(request):
+    resultado = Producto.objects.get(id=producto_id)
+    form = Productoform(instance=resultado)
+    
+    if request.method == "POST":
+        form = Productoform(request.POST, request.FILES, instance=resultado)
         if form.is_valid():
-            resultado.id_producto = request.POST["id_producto"]
-            resultado.nombre = request.POST["nombre"]
-            resultado.precio = request.POST["precio"]
-            resultado.descripcion = request.POST["descripcion"]
-            resultado.cantidad = request.POST["cantidad"]
-            resultado.categoria = request.POST["categoria"]
-            resultado.save()
-            return redirect("/updateproducto")
-
-    context={
-        'form':form,
-        'resultado':resultado,
-        'id':id,
+            form.save()
+            return redirect("/inventario")
+            return HttpResponse("Producto actualizado correctamente")
+    
+    context = {
+        'form': form,
+        'resultado': resultado,
+        'id': producto_id,
     }
-    return render (request, template_to_return,context)
+    return render(request, 'updateproducto.html', context)
+
+
+
+def obtener_producto(request, id):
+    try:
+        producto = Producto.objects.get(id=id)
+        response = {
+            'producto': {
+                'id': producto.id,
+                'nombre': producto.nombre,
+                'precio': producto.precio,
+                'cantidad': producto.cantidad,
+                'descripcion': producto.descripcion,
+                'categoria': producto.categoria
+            }
+        }
+        return JsonResponse(response)
+    except Producto.DoesNotExist:
+        return JsonResponse({'error': 'Producto no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+#eliminar
+def eliminar_producto(request):
+    if request.method == "POST":
+        producto_id = request.POST.get("id_producto")
+
+        # Obtener el producto a eliminar
+        producto = get_object_or_404(Producto, id=producto_id)
+
+        # Eliminar el producto de la base de datos
+        producto.delete()
+
+        # Redirigir a la página de inventario
+        return redirect("/inventario")
+
+    # Si la petición no es POST, devolver una respuesta de error
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
 #Buscador
 def buscar_productos(request):
