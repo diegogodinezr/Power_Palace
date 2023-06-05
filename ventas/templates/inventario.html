@@ -113,7 +113,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 71vh;
+            height: 90vh;
             background-color: white;
             font-family: 'Magra', sans-serif;
         }
@@ -279,6 +279,20 @@
             margin-top: 5px;
             cursor: pointer;
         }
+
+        label{
+            font-size: 12px;
+            font-family: 'Magra', sans-serif;
+        }
+
+        #cerrarmodal {
+            width: 50px;
+            height: 40px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+       }
     </style>
 </head>
 
@@ -382,6 +396,7 @@
         <div class="form_contenido">
             <div style="width: 100%; text-align: center;">
                 <h1 style="font-size: 35px; padding-bottom: 5px;">Modificar producto</h1>
+                <img src="/media/cerrar.png" id="cerrarmodal" alt="cerrar">
                 <div id="contenedor-formulario">
                     <form id="formulario-producto" method="post" action="/updateproducto/" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -630,6 +645,15 @@
                 }
             });
         });
+    });
+
+    var cerrarModalBtn = document.getElementById("cerrarmodal");
+
+    // Agregar un evento de clic al botón de cierre del modal
+    cerrarModalBtn.addEventListener("click", function() {
+        // Ocultar el modal al hacer clic en el botón de cierre
+        var modal = document.getElementById("modal");
+        modal.style.display = "none";
     });
 </script>
 
