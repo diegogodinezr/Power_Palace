@@ -138,6 +138,15 @@
             align-items: center;
         }
 
+        #contenedor-formulario label {
+            margin-bottom: 5px;
+        }
+
+        #contenedor-formulario input,
+        #contenedor-formulario textarea {
+            margin-bottom: 10px;
+        }
+
         .ingresar,
         textarea {
             display: block !important;
@@ -261,6 +270,15 @@
             padding: 4px 6px;
             border: 0;
         }
+
+        .filtro {
+            width: 17px;
+            height: 17px;
+            float: right;
+            margin-right: 10px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -269,38 +287,65 @@
         <div class="contenido">
             <h1>Inventario</h1>
             <div class="contenedor_buscar">
-                <img src="/media/buscar.png" alt="">
+                <img src="/media/buscar.png" alt="" onclick="buscarProductos()">
                 <div class="buscar">
-                    <input id="buscador" type="text" placeholder="Buscar">
+                    <form id="form-buscar" action="/inventario" method="GET">
+                        <input id="input-buscar" type="text" name="q" placeholder="Buscar" value="{{ query|default:'Buscar' }}">
+                    </form>
                 </div>
             </div>
+
             <div id="tabla-container">
                 <table id="tabla-productos">
                     <thead>
-                        <tr>
-                            <th style="width: 10%;">ID</th>
-                            <th style="width: 15%;">Nombre</th>
-                            <th style="width: 20%;">Descripción</th>
-                            <th style="width: 15%;">Categoría</th>
-                            <th style="width: 10%;">Existencia</th>
-                            <th style="width: 10%;">Precio </th>
-                            <th style="width: 10%;"></th>
-                            <th style="width: 10%;"></th>
-                        </tr>
+                        <form action="/filters" method="get">
+                            <tr>
+                                {% csrf_token %}
+                                <th style="width: 12%;">ID Producto <img class="filtro" src="/media/filtro.png"
+                                        alt=""><input type="number" name="id_producto"
+                                        style="display: none; border-radius: 20px; width: 90%; padding-left: 10px;">
+                                </th>
+                                <th style="width: 12%;">Nombre <img class="filtro" src="/media/filtro.png" alt=""><input
+                                        type="text" name="nombre"
+                                        style="display: none; border-radius: 20px; width: 90%; padding-left: 10px;">
+                                </th>
+                                <th style="width: 20%;">Descripcion <img class="filtro" src="/media/filtro.png"
+                                        alt=""><input type="text" name="descripcion"
+                                        style="display: none; border-radius: 20px; width: 90%; padding-left: 10px;">
+                                </th>
+                                <th style="width: 20%;">Categoria <img class="filtro" src="/media/filtro.png"
+                                        alt=""><input type="text" name="categoria"
+                                        style="display: none; border-radius: 20px; width: 90%; padding-left: 10px;">
+                                </th>
+                                <th style="width: 12%;">Cantidad <img class="filtro" src="/media/filtro.png"
+                                        alt=""><input type="number" name="cantidad"
+                                        style="display: none; border-radius: 20px; width: 90%; padding-left: 10px;">
+                                </th>
+                                <th style="width: 12%;">Precio <img class="filtro" src="/media/filtro.png" alt=""><input
+                                        type="number" name="precio"
+                                        style="display: none; border-radius: 20px; width: 90%; padding-left: 10px;">
+                                </th>
+                                <th style="width: 12%;"><button type="submit" type="submit"
+                                        style="width: 120px; padding: 4px 8px;">Aplicar filtros</button></th>
+                                <th style="width: 12%;"><button type="submit"
+                                        style="width: 120px; padding: 4px 8px;">Quitar filtros</button></th>
+                            </tr>
+                        </form>
                     </thead>
                     <tbody>
                         {% for producto in productos %}
                         <tr>
-                            <td>{{ producto.id }}</td>
+                            <td>{{ producto.id_producto }}</td>
                             <td>{{ producto.nombre }}</td>
                             <td>{{ producto.descripcion }}</td>
                             <td>{{ producto.categoria }}</td>
                             <td>{{ producto.cantidad }}</td>
                             <td>{{ producto.precio }}</td>
                             <td>
-                                <button class="editar" data-id="{{ producto.id }}">
-                                    <img class="imagenes" src="/media/modificar_tabla.svg" alt=""> Editar
-                                </button>
+                                <div class="acciones">
+                                    <a class="editar" data-id="{{ producto.id }}"><img class="imagenes"
+                                            src="/media/modificar_tabla.svg" alt="">Editar</a>
+                                </div>
                             </td>
                             <td>
                                 <div class="acciones">
@@ -308,6 +353,10 @@
                                             src="/media/eliminar_tablas.png" alt=""> Eliminar</a>
                                 </div>
                             </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">No se encontraron resultados.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -318,33 +367,37 @@
     <div id="modal_eliminar" class="modal_eliminar">
         <div class="modal-contenido">
             <div class="modal-cerrar">
-                <img src="/media/cerrar.png" id="miImagen" alt="cerrar">
+                <img src="/media/cerrar.png" id="miImagen" alt="cerrar" onclick="cerrarModalEliminar()">
             </div>
             <form id="formulario-eliminar" method="post" action="/eliminar_producto/">
                 {% csrf_token %}
+                <p>¿Está seguro que desea eliminar el producto?</p>
                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                 <input type="hidden" name="id_producto" id="producto_id_eliminar" value="">
-                <button type="submit" id="finalizar_btn">Eliminar</button>
+                <button type="submit" class="botones-modal" id="finalizar_btn">Eliminar</button>
             </form>
         </div>
-
     </div>
     <div id="modal" class="modal">
-        <div class=form_contenido>
+        <div class="form_contenido">
             <div style="width: 100%; text-align: center;">
                 <h1 style="font-size: 35px; padding-bottom: 5px;">Modificar producto</h1>
                 <div id="contenedor-formulario">
                     <form id="formulario-producto" method="post" action="/updateproducto/" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <input class="ingresar" type="text" id="id_producto" name="id_producto" required
-                            placeholder="ID producto">
+                        <input type="hidden" id="id" name="id" placeholder="ID" required>
+                        <label for="id_producto">ID Producto:</label>
+                        <input class="ingresar" type="text" id="id_producto" name="id_producto" required placeholder="ID producto">
+                        <label for="nombre">Nombre:</label>
                         <input class="ingresar" type="text" id="nombre" name="nombre" required placeholder="Nombre">
+                        <label for="precio">Precio:</label>
                         <input class="ingresar" type="number" id="precio" name="precio" required placeholder="Precio">
-                        <input class="ingresar" type="number" id="cantidad" name="cantidad" required
-                            placeholder="Cantidad">
+                        <label for="cantidad">Cantidad:</label>
+                        <input class="ingresar" type="number" id="cantidad" name="cantidad" required placeholder="Cantidad">
+                        <label for="descripcion">Descripción:</label>
                         <textarea id="descripcion" name="descripcion" required placeholder="Descripción"></textarea>
-                        <input class="ingresar" type="text" id="categoria" name="categoria" required
-                            placeholder="Categoría">
+                        <label for="categoria">Categoría:</label>
+                        <input class="ingresar" type="text" id="categoria" name="categoria" required placeholder="Categoría">
                         <input type="hidden" id="producto_id" name="producto_id" value="">
                         <button type="submit" id="cerrarModalBtn">Guardar</button>
                     </form>
@@ -352,9 +405,59 @@
             </div>
         </div>
     </div>
+    
 </body>
 
 <script>
+    //efecto label y placeholder
+    const inputIdProducto = document.getElementById('id_producto');
+    const labelId = document.getElementById('label-id');
+
+    inputIdProducto.addEventListener('input', function () {
+        if (this.value.trim() === '') {
+            labelId.style.display = 'none';
+        } else {
+            labelId.style.display = 'block';
+        }
+    });
+
+    //buscador
+    function buscarProductos() {
+        document.getElementById("form-buscar").submit();
+    }
+
+    document.getElementById("input-buscar").addEventListener("keyup", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            buscarProductos();
+        }
+    });
+
+
+    //AREA DE FILTROS
+    // Obtener todos los elementos con la clase "filtro"
+    var filtros = document.getElementsByClassName("filtro");
+
+    // Recorrer todos los elementos y agregar un evento de clic a cada uno
+    for (var i = 0; i < filtros.length; i++) {
+        filtros[i].addEventListener("click", mostrarInput);
+    }
+
+    // Función para mostrar u ocultar el campo de entrada al hacer clic en el filtro
+    function mostrarInput() {
+        var input = this.nextElementSibling; // Obtener el siguiente elemento después del ícono de filtro
+
+        if (input.style.display === "block") {
+            input.style.display = "none"; // Si ya está visible, ocultarlo
+        } else {
+            input.style.display = "block"; // Si está oculto, mostrarlo
+        }
+    }
+
+    var eliminarBtns = document.querySelectorAll('.btn_delete');
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     //AREA DE MODIFICAR PRODUCTO
     // Función para abrir el modal de edición
     function abrirModalEditar(event) {
@@ -372,7 +475,8 @@
                     console.log('Producto:', producto);
                     if (producto && producto.producto) {
                         const formularioProducto = document.getElementById("formulario-producto");
-                        formularioProducto.id_producto.value = producto.producto.id;
+                        formularioProducto.id.value = producto.producto.id;
+                        formularioProducto.id_producto.value = producto.producto.id_producto;
                         formularioProducto.nombre.value = producto.producto.nombre;
                         formularioProducto.precio.value = producto.producto.precio;
                         formularioProducto.cantidad.value = producto.producto.cantidad;
@@ -392,10 +496,6 @@
         xhr.send();
     }
 
-
-
-
-
     // Función para cerrar el modal de edición
     function cerrarModalEditar() {
         const modal = document.getElementById("modal");
@@ -409,9 +509,15 @@
         const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
         const productoId = formularioProducto.id_producto.value; // Obtener el id del producto del campo "id_producto"
 
+        // Validar que el campo id_producto tenga un valor válido
+        if (!productoId) {
+            console.error('El campo id_producto está vacío');
+            return;
+        }
+
         // Realizar una petición AJAX para actualizar el producto
         const xhr = new XMLHttpRequest();
-        
+
         xhr.open("POST", `/updateproducto/`, true);
         // Pasar el id en la URL
         xhr.setRequestHeader("X-CSRFToken", csrfToken);
@@ -448,9 +554,7 @@
     });
 
 
-
-
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     //AREA DE ELIMINAR PRODUCTO
@@ -473,30 +577,33 @@
     }
 
     // Función para eliminar el producto
-    // Función para eliminar el producto
     function eliminarProducto() {
-        const productoId = obtenerIdDelProducto(); // Obtener el ID del producto de alguna manera
         const productoIdInput = document.querySelector("#producto_id_eliminar");
-        const modalEliminar = document.getElementById("modal_eliminar");
+        const productoId = productoIdInput.value;
 
-        productoIdInput.value = productoId;
-        // Crear un objeto FormData para enviar los datos del formulario
         const formData = new FormData();
         formData.append("id_producto", productoId);
 
-        // Realizar una petición AJAX para eliminar el producto
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/eliminar_producto/", true);
-        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");  // Agrega esta línea para incluir el token CSRF
+        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    // Producto eliminado con éxito
-                    cerrarModalEliminar();
-                    // Puedes realizar cualquier otra acción necesaria después de eliminar el producto
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.mensaje) {
+                        cerrarModalEliminar();
+                        const filaEliminar = document.querySelector(`tr[data-id="${productoId}"]`);
+                        if (filaEliminar) {
+                            filaEliminar.remove();
+                        }
+                        // Redirigir al usuario a la página del inventario
+                        window.location.href = "/inventario";  // Reemplaza 'ruta_del_inventario' con la ruta correcta a tu vista de inventario
+                    } else {
+                        console.error("Error al eliminar el producto");
+                    }
                 } else {
-                    // Error al eliminar el producto
                     console.error("Error al eliminar el producto");
                 }
             }
@@ -505,18 +612,24 @@
         xhr.send(formData);
     }
 
+
+
+
     // Agregar eventos a los botones y enlaces relevantes
     document.addEventListener("DOMContentLoaded", function () {
-        const eliminarLinks = document.querySelectorAll(".eliminar");
-        const finalizarBtn = document.querySelector("#finalizar_btn");
-        const cerrarModalBtn = document.querySelector("#miImagen");
+        const contenedoresAcciones = document.querySelectorAll(".acciones");
 
-        eliminarLinks.forEach(function (link) {
-            link.addEventListener("click", abrirModalEliminar);
+        contenedoresAcciones.forEach(function (contenedor) {
+            contenedor.addEventListener("click", function (event) {
+                const elementoClicado = event.target;
+                const esEliminar = elementoClicado.classList.contains("eliminar");
+
+                if (esEliminar) {
+                    // Lógica para abrir el modal de eliminación
+                    abrirModalEliminar(event);
+                }
+            });
         });
-
-        finalizarBtn.addEventListener("click", eliminarProducto);
-        cerrarModalBtn.addEventListener("click", cerrarModalEliminar);
     });
 </script>
 

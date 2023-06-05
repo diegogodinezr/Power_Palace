@@ -4,6 +4,7 @@ from django.conf.urls import url,include
 from ventas.views import *
 from django.contrib.auth.views import LogoutView
 from . import views
+from .views import *
 
 app_name = 'ventas'
 
@@ -16,8 +17,9 @@ urlpatterns = [
     path('post_producto/',post_producto, name="post_producto"),
     path('registrar_producto/post_producto/',post_producto, name="post_producto"),
     path('inventario/',inventario, name="inventario"),
-    path('obtener_producto/', obtener_producto, name='obtener_producto'),
-    path('updateproducto/<int:id>/', views.updateproducto, name='updateproducto'),
+    path('filters/',filters, name="filters"),
+    path('obtener_producto/<int:id>/', obtener_producto, name='obtener_producto'),
+    path('updateproducto/', views.updateproducto, name='updateproducto'),
     path('eliminar_producto/', views.eliminar_producto, name='eliminar_producto'),
     path('ventas/',ventas, name="ventas"),
     path('buscar_productos/',buscar_productos, name="buscar_productos"),
