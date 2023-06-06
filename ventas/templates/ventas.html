@@ -192,11 +192,6 @@
     </main>
 
     <script>
-        document.getElementById("btn-back").addEventListener("click", function (event) {
-            event.preventDefault(); // Evita que el enlace navegue a la página principal
-            window.location.replace('/interfaz_venta/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
-        });
-
         function cargarCarritoDesdeLocalStorage() {
             const carritoString = localStorage.getItem('carrito');
             if (carritoString) {
@@ -224,7 +219,7 @@
 
 
         document.addEventListener('DOMContentLoaded', function () {
-            cargarCarritoDesdeLocalStorage();
+            tablaProductos.innerHTML = '';
         });
 
         const buscador = document.querySelector('#buscador');
@@ -233,7 +228,6 @@
         const TotalInput = document.querySelector('#Total');
 
         document.addEventListener('DOMContentLoaded', function () {
-            cargarCarritoDesdeLocalStorage();
             const buscadorInput = document.getElementById("buscador");
 
             buscadorInput.addEventListener('focus', function () {

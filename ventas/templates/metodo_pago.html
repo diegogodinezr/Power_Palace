@@ -121,6 +121,70 @@
         .cancelarbtn {
             background-color: #F54436;
         }
+        .modal-contenido {
+        font-family: 'Magra', sans-serif;
+        width: 400px;
+        height: 130px;
+        background-color: #A3320B;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        top: 50%; /* Centrar verticalmente */
+        left: 50%; /* Centrar horizontalmente */
+        transform: translate(-50%, -55%); /* Centrar con transform */
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: solid black;
+      }
+  
+      .modal-contenido p{
+        color: white;
+        font-size: 15px;
+        margin-top: 50px;
+      }
+  
+      .modal-cerrar{
+        width: 100%;
+        height: 35px;
+        display: flex;
+        justify-content: flex-end; /* Alinear el contenido al final del div */
+        background-color: white;
+        position: absolute; /* Establecer posición absoluta */
+        top: 0; /* Anclar el div en la parte superior del modal */
+        left: 0; /* Anclar el div a la izquierda del modal */
+        padding: 2px; /* Añadir un espacio interno de 10px */
+        box-sizing: border-box; /* Incluir el padding en el ancho total del div */
+        border-bottom: solid black;
+      }
+  
+  
+      .modal-cerrar img{
+        width: 40px;
+        height: 30px;
+        cursor: pointer;
+        
+      }
+  
+      .botones-modal{
+        display: inline-block;
+        border-radius: 10px;
+        background-color: white;
+        color: black;
+        margin-bottom: 15px;
+        padding: 4px 6px;
+        border: 0;
+      }
+
+      #messages a{
+        background-color: white;
+        color: black;
+        border-radius: 10px;
+        padding: 0 10px;
+
+      }
     </style>
 </head>
 <div class=contenido>
@@ -142,6 +206,18 @@
         </div>
     </div>
 </div>
+{% for message in messages %}
+  <div class="ventana" id="miVentana" style="position: absolute; bottom: 250px; left: 50%;">
+    <div class="modal-contenido">
+      <div class="modal-cerrar">
+        <a href="/interfaz_venta"><img src="/media/cerrar.png" id="cerrar" alt="cerrar"></a>
+      </div>
+      <p id="messages">{{ message }}</p>
+      <a href="/interfaz_venta"><button class="botones-modal">Finalizar</button></a>
+    </div>
+  </div>      
+  </div>
+  {% endfor %} 
 {% endblock %}
 
 
