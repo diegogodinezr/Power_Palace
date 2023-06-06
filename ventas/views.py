@@ -344,7 +344,7 @@ def filtrosv(request):
         if fechac:
             consulta = consulta.filter(fecha=fechac)
         if productosc:
-            consulta = consulta.filter(productosv=productosc)
+            consulta = consulta.filter(productosv__contains=productosc)
         if subtotalc:
             consulta = consulta.filter(subtotal=subtotalc)
         if ivac:
@@ -352,7 +352,7 @@ def filtrosv(request):
         if totalc:
             consulta = consulta.filter(total=totalc)
         if metodo_pagoc:
-            consulta = consulta.filter(metodo_pago=metodo_pagoc)
+            consulta = consulta.filter(metodo_pago__icontains=metodo_pagoc)
 
     if not consulta.exists():
         messages.info(request, 'No se encontraron resultados.')
