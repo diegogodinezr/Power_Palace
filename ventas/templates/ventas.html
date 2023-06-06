@@ -192,34 +192,9 @@
     </main>
 
     <script>
-        function cargarCarritoDesdeLocalStorage() {
-            const carritoString = localStorage.getItem('carrito');
-            if (carritoString) {
-                console.log('Carrito almacenado en localStorage:', carritoString);
-                const carrito = JSON.parse(carritoString);
-                console.log('Carrito parseado:', carrito);
-
-                // Borrar contenido de la tabla
-                tablaProductos.innerHTML = '';
-
-                // Reiniciar el registro de productos en la tabla
-                productosEnTabla = [];
-
-                // Agregar cada producto del carrito a la tabla
-                carrito.productos.forEach(producto => {
-                    agregarProductoTabla(producto);
-                });
-
-                calcularTotal(); // Recalcular el total después de cargar los productos
-            } else {
-                console.log('No se encontró ningún carrito en localStorage.');
-            }
-        }
-
-
-
+        
         document.addEventListener('DOMContentLoaded', function () {
-            cargarCarritoDesdeLocalStorage();
+            tablaProductos.innerHTML = '';
         });
 
         const buscador = document.querySelector('#buscador');
@@ -228,7 +203,6 @@
         const TotalInput = document.querySelector('#Total');
 
         document.addEventListener('DOMContentLoaded', function () {
-            cargarCarritoDesdeLocalStorage();
             const buscadorInput = document.getElementById("buscador");
 
             buscadorInput.addEventListener('focus', function () {

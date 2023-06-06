@@ -240,6 +240,10 @@ def post_pagov(request):
         fechap = datetime.now()
         vendido = ''
         productos = request.session.get('productosc')
+        if productos == []:
+            messages.info(request, "Error, no agrego productos al carrito")
+            return render(request, 'metodo_pago.html')
+        print("Estos son los productos"+str(productos))
         for producto in productos:
             id_productoa = producto['id_producto']
             nombrea = producto['nombre']
@@ -247,6 +251,23 @@ def post_pagov(request):
             cantidada = producto['cantidad']
             subtotala = producto['subtotal']
             vendido = vendido + ' ' + nombrea + ' cantidad: ' + str(cantidada) + ', '
+            modificar = Producto.objects.get(id_producto=id_productoa)
+            if cantidada is None:
+                print("Cantidad no especificada")
+                messages.info(request, "Venta cancelada, cantidad no especificada")
+                return render(request, 'metodo_pago.html')
+            elif cantidada > modificar.cantidad:
+                print("Excede la cantidad en inventario")
+                messages.info(request, 'Venta cancelada, solo hay ' + str(modificar.cantidad) + ' ' + str(modificar.nombre))
+                return render(request, 'metodo_pago.html')
+            elif cantidada < 1:
+                print("Venta cancelada por cantidad inválida")
+                messages.info(request, "Venta cancelada, ingrese una cantidad válida")
+                return render(request, 'metodo_pago.html')
+            else:
+                modificar.cantidad = modificar.cantidad - cantidada
+                modificar.save()
+
 
         HistorialVenta.objects.create(
             fecha = fechap,
