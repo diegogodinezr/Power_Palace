@@ -192,6 +192,11 @@
     </main>
 
     <script>
+        document.getElementById("btn-back").addEventListener("click", function (event) {
+            event.preventDefault(); // Evita que el enlace navegue a la página principal
+            window.location.replace('/interfaz_venta/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
+        });
+
         function cargarCarritoDesdeLocalStorage() {
             const carritoString = localStorage.getItem('carrito');
             if (carritoString) {
@@ -329,7 +334,7 @@
                 incrementarCantidadProducto(producto.id);
                 return;
             }
-            
+
             const fila = document.createElement('tr');
             fila.innerHTML = `
                                 <td><input type="hidden" name="nombre">${producto.nombre}</td>

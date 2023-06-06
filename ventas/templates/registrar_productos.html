@@ -73,7 +73,7 @@
       margin: 0;
     }
 
-    button[type="submit"] {
+    button[type="button"] {
       padding: 8px 16px;
       background-color: white;
       color: black;
@@ -98,7 +98,7 @@
 
     .modal-contenido {
       font-family: 'Magra', sans-serif;
-      width: 340px;
+      width: auto;
       height: 120px;
       background-color: #791F00;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -144,12 +144,10 @@
       border-bottom: solid black;
     }
 
-
     .modal-cerrar img {
       width: 40px;
       height: 30px;
       cursor: pointer;
-
     }
 
     .botones-modal {
@@ -164,46 +162,77 @@
   </style>
 
 </head>
-<div class=contenido>
-  <div style="width: 100%; text-align: center;">
-    <h1 style="font-size: 35px; padding-bottom: 5px;">Registrar producto</h1>
-    <div id="contenedor-formulario">
-      <form id="formulario-producto" method="post" action="/post_producto/" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" id="id_producto" name="id_producto" required required placeholder="ID producto">
-        <input type="text" id="nombre" name="nombre" required placeholder="Nombre">
-        <input type="number" id="precio" name="precio" required placeholder="Precio">
-        <input type="number" id="cantidad" name="cantidad" required placeholder="Cantidad">
-        <textarea id="descripcion" name="descripcion" required placeholder="Descripción"></textarea>
-        <input type="text" id="categoria" name="categoria" required placeholder="categoría">
-        <button type="submit">Guardar</button>
-      </form>
+
+<body>
+  <div class="contenido">
+    <div style="width: 100%; text-align: center;">
+      <h1 style="font-size: 35px; padding-bottom: 5px;">Registrar producto</h1>
+      <div id="contenedor-formulario">
+        <form id="formulario-producto" method="post" action="/post_producto/" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="text" id="id_producto" name="id_producto" required required placeholder="ID producto">
+          <input type="text" id="nombre" name="nombre" required placeholder="Nombre">
+          <input type="number" id="precio" name="precio" required placeholder="Precio">
+          <input type="number" id="cantidad" name="cantidad" required placeholder="Cantidad">
+          <textarea id="descripcion" name="descripcion" required placeholder="Descripción"></textarea>
+          <input type="text" id="categoria" name="categoria" required placeholder="categoría">
+          <button type="button" onclick="guardarProducto()">Guardar</button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-<div id="modal" class="modal">
-  <div class="modal-contenido">
-    <div class="modal-cerrar">
-      <img src="/media/cerrar.png" id="miImagen" alt="cerrar">
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-contenido">
+      <div class="modal-cerrar">
+        <img src="/media/cerrar.png" id="miImagen" alt="cerrar" onclick="cerrarModal()">
+      </div>
+      <p>Producto registrado correctamente</p>
+      <button class="botones-modal" onclick="finalizar()">Registrar nuevo producto</button>
+      <button class="botones-modal" onclick="finalizar()">Finalizar</button>
     </div>
-    <p>Producto registrado correctamente</p>
-    <button class="botones-modal" onclick="cerrarModal()">Registrar nuevo producto</button>
-    <button class="botones-modal" onclick="cerrarModal()">Finalizar</button>
-    <!-- Agregar un botón para cerrar el modal -->
   </div>
-</div>
-{% endblock content %}
+
+  {% endblock %}
+
+  {% block js %}
+  <script>
+    document.getElementById("btn-back").addEventListener("click", function (event) {
+      event.preventDefault(); // Evita que el enlace navegue a la página principal
+      window.location.replace('/interfaz_venta/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
+    });
+
+    function abrirModal() {
+      var modal = document.getElementById('modal');
+      modal.style.display = 'block';
+    }
+
+    function cerrarModal() {
+      var modal = document.getElementById('modal');
+      modal.style.display = 'none';
+      setTimeout(function () {
+        location.reload(); // Recargar la página después de 1 segundo (1000 milisegundos)
+      }, 1000);
+    }
+    function finalizar() {
+      window.location.href = '/registrar_producto/'; // Redirigir a la misma URL
+    }
+    function guardarProducto() {
+      var form = document.getElementById('formulario-producto');
+      var formData = new FormData(form);
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/post_producto/', true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          abrirModal();
+        }
+      };
+      xhr.send(formData);
+    }
+  </script>
+  {% endblock js %}
+</body>
 
 </html>
-
-{% block js %}
-
-<script>
-  document.getElementById("miImagen").addEventListener("click", cerrarModal);
-  function cerrarModal() {
-    var modal = document.getElementById('modal');
-    modal.style.display = 'none';
-  }
-</script>
-
-{% endblock js %}

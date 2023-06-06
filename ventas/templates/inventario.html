@@ -409,6 +409,10 @@
 </body>
 
 <script>
+    document.getElementById("btn-back").addEventListener("click", function (event) {
+      event.preventDefault(); // Evita que el enlace navegue a la página principal
+      window.location.replace('/interfaz_venta/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
+    });
     //efecto label y placeholder
     const inputIdProducto = document.getElementById('id_producto');
     const labelId = document.getElementById('label-id');

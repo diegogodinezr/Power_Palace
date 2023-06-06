@@ -136,6 +136,11 @@
 
 {% block js %}
 <script>
+    document.getElementById("btn-back").addEventListener("click", function (event) {
+      event.preventDefault(); // Evita que el enlace navegue a la página principal
+      window.location.replace('/inventario/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         const opciones = document.querySelectorAll('.opcion');
 

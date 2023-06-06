@@ -147,6 +147,11 @@
 
 {% block js %}
 <script>
+    document.getElementById("btn-back").addEventListener("click", function (event) {
+      event.preventDefault(); // Evita que el enlace navegue a la página principal
+      window.location.replace('/pago/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
+    });
+
     function calcularSubtotal() {
         var total = parseFloat(document.getElementById("Total").value.slice(1));
         var iva = (total / 1.16) * 0.16;
