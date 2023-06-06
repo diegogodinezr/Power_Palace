@@ -26,5 +26,7 @@ urlpatterns = [
     path('pago/',pago, name="pago"),
     path('pago/metodo_pago/',metodo_pago, name="metodo_pago"),
     path('metodo_pago/',metodo_pago, name="metodo_pago"),
+    path('post_pagov/',post_pagov, name="post_pagov"),
     path('historial_ventas/',historial_ventas, name="historial_ventas"),
+    path('filtrosv/',filtrosv, name="filtrosv"),
 ]

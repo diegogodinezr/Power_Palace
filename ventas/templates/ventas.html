@@ -281,10 +281,21 @@
             // Guardar el carrito en localStorage antes de redirigir a la página de pago
             guardarCarritoEnLocalStorage();
 
-            // Ejemplo de redirección a la página de pago con el total como parámetro en la URL
-            // Antes de redirigir a pago.html
+            const info = obtenerProductosCarrito();
+
+            // Ejemplo de redirección a la página de pago con el total y la info como parámetros en la URL
             var direccion = '/pago/?total=' + encodeURIComponent(total.toFixed(2));
-            window.location.href = direccion;
+            $.ajax({
+                url: direccion,
+                data: { 'info': JSON.stringify(info) }, // Convertir info a una cadena JSON
+                success: function (response) {
+                    // Realizar acciones después de recibir una respuesta exitosa
+                    window.location.href = direccion;
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    // Manejar el error de la petición AJAX
+                }
+            });
         });
 
         // Obtener las opciones de búsqueda desde el servidor

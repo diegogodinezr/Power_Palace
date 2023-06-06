@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.db.models import Q
+from datetime import datetime, timedelta
 
 #====================LOGIN====================
 def login_ventas(request):
@@ -212,16 +213,84 @@ def obtener_productos_del_carrito():
     return carrito
 
 
+import json
 def pago(request):
     template_to_return='pago.html'
+    total = request.GET.get('total')
+    info = request.GET.get('info')
+
+    if info:
+        info_dict = json.loads(info)  # Convierte la cadena JSON en un diccionario
+
+        compra_total = info_dict['compra']['total']
+        productos = info_dict['productos']
+        request.session['compra'] = compra_total
+        request.session['productosc'] = productos
+
+        print("hola")
+        print(str(compra_total))
+        print(str(productos))
     context={ 
         'view_name': "landing1",
     }
     return render (request,template_to_return,context)
     
+def post_pagov(request):
+    if request.method == "POST":
+        fechap = datetime.now()
+        vendido = ''
+        productos = request.session.get('productosc')
+        for producto in productos:
+            id_productoa = producto['id_producto']
+            nombrea = producto['nombre']
+            precioa = producto['precio']
+            cantidada = producto['cantidad']
+            subtotala = producto['subtotal']
+            vendido = vendido + ' ' + nombrea + ' cantidad: ' + str(cantidada) + ', '
 
+        HistorialVenta.objects.create(
+            fecha = fechap,
+            metodo_pago=request.POST["metodo_pago"],
+            iva=request.POST["iva"],
+            subtotal=request.POST["subtotal"],
+            total=request.POST["total"],
+            productosv = vendido,
+        )
+        compra = request.session.get('compra')
+        ultimaventa = HistorialVenta.objects.latest('id')
+        idhventa = ultimaventa.id
+        for producto in productos:
+            id_productoa = producto['id_producto']
+            nombrea = producto['nombre']
+            precioa = producto['precio']
+            cantidada = producto['cantidad']
+            subtotala = producto['subtotal']
+
+            Venta.objects.create(
+                idhistorial = idhventa,
+                id_producto = id_productoa,
+                nombre = nombrea,
+                precio = precioa,
+                cantidad = cantidada,
+                subtotal = subtotala
+            )
+
+        del request.session['compra']
+        del request.session['productosc']
+        try:
+            print("venta completada")
+            messages.info(request,'Venta realizada correctamente!')
+            return render(request, 'metodo_pago.html')
+        except:
+            messages.info(request,'Error venta no realizada!')
+            return render(request, 'metodo_pago.html')
+
+    else:
+        return render(request, 'metodo_pago.html')
+    
 def metodo_pago(request):
     metodo_pago = request.GET.get('metodo_pago')
+    
     context = {
         'view_name': "landing1",
         'metodo_pago': metodo_pago,
@@ -230,35 +299,47 @@ def metodo_pago(request):
 
 #====================HISTORIAL VENTAS====================
 def historial_ventas(request):
-    if request.method == 'POST':
-        form = HistorialVentaForm(request.POST)
-        print(form.errors)
-        print(form.cleaned_data)
+    historial = HistorialVenta.objects.all()
+    context = {
+        'view_name': "landing1",
+        'ventas': historial
+    }
+    return render(request, 'historial_ventas.html', context)
 
-        if form.is_valid():
-            fecha = form.cleaned_data['fecha']
-            id_producto = form.cleaned_data['id_producto']
-            nombre = form.cleaned_data['nombre']
-            cantidad = form.cleaned_data['cantidad']
-            precio = form.cleaned_data['precio']
-            subtotal = form.cleaned_data['subtotal']
-            metodo_pago = form.cleaned_data['metodo_pago']
-            total = form.cleaned_data['total']  # Corrección: utiliza "total" en lugar de "Total"
-            
-            venta = HistorialVenta(
-                fecha=fecha,
-                id_producto=id_producto,
-                nombre=nombre,
-                cantidad=cantidad,
-                precio=precio,
-                subtotal=subtotal,
-                metodo_pago=metodo_pago,
-                total=total
-            )
-            venta.save()
-            return redirect('historial_ventas')  # Redirecciona a la página de historial de ventas
-    else:
-        form = HistorialVentaForm()
-    
-    return render(request, 'historial_ventas.html', {'form': form})
+def filtrosv(request):
+    formulario = HistorialVentaForm()
+    consulta = HistorialVenta.objects.all()
+    if request.method == 'GET':
+        idc = request.GET.get('id')
+        fechac = request.GET.get('fecha')
+        productosc = request.GET.get('productosv')
+        subtotalc = request.GET.get('subtotal')
+        ivac = request.GET.get('iva')
+        totalc = request.GET.get('total')
+        metodo_pagoc = request.GET.get('metodo_pago')
+
+        if idc:
+            consulta = consulta.filter(id=idc)
+        if fechac:
+            consulta = consulta.filter(fecha=fechac)
+        if productosc:
+            consulta = consulta.filter(productosv=productosc)
+        if subtotalc:
+            consulta = consulta.filter(subtotal=subtotalc)
+        if ivac:
+            consulta = consulta.filter(iva=ivac)
+        if totalc:
+            consulta = consulta.filter(total=totalc)
+        if metodo_pagoc:
+            consulta = consulta.filter(metodo_pago=metodo_pagoc)
+
+    if not consulta.exists():
+        messages.info(request, 'No se encontraron resultados.')
+
+    context = {
+        "formulario": formulario,
+        "ventas": consulta,
+    }
+
+    return render(request, 'historial_ventas.html', context)
 

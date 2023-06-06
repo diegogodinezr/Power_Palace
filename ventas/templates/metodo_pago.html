@@ -126,13 +126,13 @@
 <div class=contenido>
     <div style="width: 100%; text-align: center;">
         <div id="contenedor-formulario">
-            <form id="formulario-producto" method="post" action="/historial_ventas/" enctype="multipart/form-data">
+            <form id="formulario-producto" method="post" action="/post_pagov/" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <p class="cont">Método de pago</p><input type="text" name="metodo_pago" id="metodo_pago" value=""
                     readonly>
-                <p class="cont">Subtotal $</p><input type="text" name="subtotal" id="subtotal" value="$" readonly><br>
-                <p class="cont">IVA (16%) $</p><input type="text" name="iva" id="iva" value="$" readonly><br>
+                <p class="cont">Subtotal $</p><input type="text" name="subtotal" id="subtotal" value="" readonly><br>
+                <p class="cont">IVA (16%) $</p><input type="text" name="iva" id="iva" value="" readonly><br>
                 <p class="cont">Total $</p><input type="text" name="total" id="Total" onchange="calcularSubtotal()"
                     value="$" readonly>
                 <div><button type="submit">Pagar</button></div>
@@ -153,11 +153,11 @@
     });
 
     function calcularSubtotal() {
-        var total = parseFloat(document.getElementById("Total").value.slice(1));
+        var total = parseFloat(document.getElementById("Total").value);
         var iva = (total / 1.16) * 0.16;
-        document.getElementById("iva").value = "$" + iva.toFixed(2);
+        document.getElementById("iva").value = iva.toFixed(2);
         var subtotal = total - iva;
-        document.getElementById("subtotal").value = "$" + subtotal.toFixed(2);
+        document.getElementById("subtotal").value = subtotal.toFixed(2);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -167,7 +167,7 @@
 
         // Establecer el valor en el campo de entrada
         $("#metodo_pago").val(metodoPago);
-        $("#Total").val("$" + tota.toFixed(2));
+        $("#Total").val(tota.toFixed(2));
 
         // Obtener el valor del total desde la URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -175,61 +175,11 @@
 
         // Establecer el valor en el campo de entrada
         const totalInput = document.getElementById('Total');
-        totalInput.value = "$" + totalFromURL;
+        totalInput.value = totalFromURL;
 
         // Calcular subtotal y iva al modificar el valor del campo
         calcularSubtotal();
     });
 
-    function obtenerCarritoDesdeLocalStorage() {
-        const carrito = JSON.parse(localStorage.getItem('carrito'));
-        return carrito ? carrito : [];
-    }
-
-    const formulario = document.getElementById('formulario-producto');
-    formulario.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        // Obtener los valores de los campos de entrada
-        const metodoPago = document.getElementById('metodo_pago').value;
-        const total = document.getElementById('Total').value.slice(1);
-
-        // Obtener los datos del carrito del localStorage
-        const carrito = JSON.parse(localStorage.getItem('carrito'));
-
-        // Crear un objeto con los datos a enviar
-        const datosEnvio = {
-            metodo_pago: metodoPago,  // Cambiar "metodo_pago" a minúscula inicial
-            subtotal: document.getElementById('subtotal').value.slice(1),
-            iva: document.getElementById('iva').value.slice(1),
-            total: total,
-            carrito: carrito
-        };
-
-
-        // Realizar una solicitud POST al servidor
-        fetch('/historial_ventas/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(datosEnvio)
-        })
-            .then(response => {
-                // Realizar acciones después de la respuesta del servidor
-                // Por ejemplo, redireccionar a una página de confirmación
-                window.location.href = '/ventas/';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
-
-    const cancelarbtn = document.querySelector('.cancelarbtn');
-    function eliminarCarritoLocalStorage() {
-        localStorage.removeItem('carrito');
-    }
-    cancelarbtn.addEventListener('click', eliminarCarritoLocalStorage);
 </script>
 {% endblock js %}
