@@ -182,7 +182,8 @@
             margin: 0;
         }
 
-        button[type="submit"] {
+        button[type="submit"],
+        button[type="button"] {
             padding: 8px 16px;
             background-color: white;
             color: black;
@@ -202,6 +203,32 @@
             background-color: rgba(0, 0, 0, 0.2);
             /* Fondo oscuro semitransparente */
             z-index: 9998;
+            /* Asegurarse de que el modal esté por encima del resto del contenido */
+        }
+
+        .modal_modificar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            /* Fondo oscuro semitransparente */
+            z-index: 9999;
+            /* Asegurarse de que el modal esté por encima del resto del contenido */
+        }
+
+        .modal_error {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            /* Fondo oscuro semitransparente */
+            z-index: 9997;
             /* Asegurarse de que el modal esté por encima del resto del contenido */
         }
 
@@ -280,7 +307,7 @@
             cursor: pointer;
         }
 
-        label{
+        label {
             font-size: 12px;
             font-family: 'Magra', sans-serif;
         }
@@ -292,9 +319,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-       }
-       
-       
+        }
     </style>
 </head>
 
@@ -306,7 +331,8 @@
                 <img src="/media/buscar.png" alt="" onclick="buscarProductos()">
                 <div class="buscar">
                     <form id="form-buscar" action="/inventario" method="GET">
-                        <input id="input-buscar" type="text" name="q" placeholder="Buscar" value="{{ query|default:'Buscar' }}">
+                        <input id="input-buscar" type="text" name="q" placeholder="Buscar"
+                            value="{{ query|default:'Buscar' }}">
                     </form>
                 </div>
             </div>
@@ -321,8 +347,8 @@
                                         alt=""><input class="ingresarf" type="number" name="id_producto"
                                         style="display: none; border-radius: 20px; width: 90%; padding-left: 10px; background-color: white; height: 25px;">
                                 </th>
-                                <th style="width: 12%;">Nombre <img class="filtro" src="/media/filtro.png" alt=""><input class="ingresarf"
-                                        type="text" name="nombre"
+                                <th style="width: 12%;">Nombre <img class="filtro" src="/media/filtro.png" alt=""><input
+                                        class="ingresarf" type="text" name="nombre"
                                         style="display: none; border-radius: 20px; width: 90%; padding-left: 10px;background-color: white; height: 25px;">
                                 </th>
                                 <th style="width: 20%;">Descripcion <img class="filtro" src="/media/filtro.png"
@@ -337,8 +363,8 @@
                                         alt=""><input class="ingresarf" type="number" name="cantidad"
                                         style="display: none; border-radius: 20px; width: 90%; padding-left: 10px; background-color: white; height: 25px;">
                                 </th>
-                                <th style="width: 12%;">Precio <img class="filtro" src="/media/filtro.png" alt=""><input class="ingresarf"
-                                        type="number" name="precio"
+                                <th style="width: 12%;">Precio <img class="filtro" src="/media/filtro.png" alt=""><input
+                                        class="ingresarf" type="number" name="precio"
                                         style="display: none; border-radius: 20px; width: 90%; padding-left: 10px; background-color: white; height: 25px;">
                                 </th>
                                 <th style="width: 12%;"><button type="submit" type="submit"
@@ -400,35 +426,105 @@
                 <h1 style="font-size: 35px; padding-bottom: 5px;">Modificar producto</h1>
                 <img src="/media/cerrar.png" id="cerrarmodal" alt="cerrar">
                 <div id="contenedor-formulario">
-                    <form id="formulario-producto" method="post" action="/updateproducto/" enctype="multipart/form-data">
+                    <form id="formulario-producto" method="post" action="/updateproducto/"
+                        enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" id="id" name="id" placeholder="ID" required>
                         <label for="id_producto">ID Producto:</label>
-                        <input class="ingresar" type="text" id="id_producto" name="id_producto" required placeholder="ID producto">
+                        <input class="ingresar" type="text" id="id_producto" name="id_producto" required
+                            placeholder="ID producto">
                         <label for="nombre">Nombre:</label>
                         <input class="ingresar" type="text" id="nombre" name="nombre" required placeholder="Nombre">
                         <label for="precio">Precio:</label>
                         <input class="ingresar" type="number" id="precio" name="precio" required placeholder="Precio">
                         <label for="cantidad">Cantidad:</label>
-                        <input class="ingresar" type="number" id="cantidad" name="cantidad" required placeholder="Cantidad">
+                        <input class="ingresar" type="number" id="cantidad" name="cantidad" required
+                            placeholder="Cantidad">
                         <label for="descripcion">Descripción:</label>
                         <textarea id="descripcion" name="descripcion" required placeholder="Descripción"></textarea>
                         <label for="categoria">Categoría:</label>
-                        <input class="ingresar" type="text" id="categoria" name="categoria" required placeholder="Categoría">
+                        <input class="ingresar" type="text" id="categoria" name="categoria" required
+                            placeholder="Categoría">
                         <input type="hidden" id="producto_id" name="producto_id" value="">
-                        <button type="submit" id="cerrarModalBtn">Guardar</button>
+                        <button type="submit" >Guardar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
+    <div id="modal_modificar" class="modal_modificar">
+        <div class="modal-contenido">
+            <div class="modal-cerrar">
+                <img src="/media/cerrar.png" id="miImagen" alt="cerrar" onclick="cerrarModal()">
+            </div>
+            <div>
+                <p>Producto modificado correctamente!</p>
+                <button type="button" onclick="cerrarModal()">Finalizar</button>
+            </div>
+
+        </div>
+    </div>
+    <div id="modal_error" class="modal_error">
+        <div class="modal-contenido">
+            <div class="modal-cerrar">
+                <img src="/media/cerrar.png" id="miImagen" alt="cerrar" onclick="cerrarModal()">
+            </div>
+            <div>
+                <p>Error, ingresó datos invalidos!</p>
+                <button type="button" onclick="cerrarModal()">Finalizar</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 <script>
+    //modales de modificar
+    function abrirModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = 'block';
+    }
+
+    function cerrarModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = 'none';
+        // Restablecer el formulario u otras acciones necesarias al cerrar el modal
+    }
+
+    // Ejemplo de cómo usar los modales
+
+    document.getElementById('formulario-producto').addEventListener('submit', function (event) {
+        event.preventDefault(); // Evitar que el formulario se envíe
+
+        var form = document.getElementById('formulario-producto');
+        var formData = new FormData(form);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/updateproducto/', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.valid) {
+                        abrirModal('modal_modificar'); // Abrir modal de modificación exitosa
+                    } else {
+                        abrirModal('modal_error'); // Abrir modal de error
+                    }
+                }
+            }
+        };
+        xhr.send(formData);
+    });
+
+
+
+
+
+
+
+
     document.getElementById("btn-back").addEventListener("click", function (event) {
-      event.preventDefault(); // Evita que el enlace navegue a la página principal
-      window.location.replace('/interfaz_venta/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
+        event.preventDefault(); // Evita que el enlace navegue a la página principal
+        window.location.replace('/interfaz_venta/'); // Redirige a la página de registro de productos sin agregar una entrada al historial
     });
     //efecto label y placeholder
     const inputIdProducto = document.getElementById('id_producto');
@@ -656,7 +752,7 @@
     var cerrarModalBtn = document.getElementById("cerrarmodal");
 
     // Agregar un evento de clic al botón de cierre del modal
-    cerrarModalBtn.addEventListener("click", function() {
+    cerrarModalBtn.addEventListener("click", function () {
         // Ocultar el modal al hacer clic en el botón de cierre
         var modal = document.getElementById("modal");
         modal.style.display = "none";
