@@ -224,8 +224,18 @@ def regresar(request):
 def modificar_pago(request):
     # Obtener el ID del cliente desde la sesión
     clienteid = request.session.get('id_cliente')
-    usuario = cliente.objects.get(id=clienteid)
-    correoe = usuario.correo
+    try:
+        usuario = cliente.objects.get(id=clienteid)
+        correoe = usuario.correo
+        pagov = pago.objects.get(id_cliente=clienteid)
+        fechav = pagov.fecha_limite 
+        formato_fecha = fechav.strftime("%d/%m/%Y")
+        if fechav > (datetime.now()).date():
+            messages.info(request, 'Renovación cancelada.\nSu membresia vence el '+ formato_fecha)
+            return render(request, 'registrar_usuarios.html')
+    except cliente.DoesNotExist:
+        messages.info(request, 'Cliente no encontrado.\nverifique el id')
+        return render(request, 'registrar_usuarios.html')
     # Aquí puedes realizar la lógica para modificar el pago utilizando el id_cliente
     if request.method == "POST":
         fpago = datetime.now()
